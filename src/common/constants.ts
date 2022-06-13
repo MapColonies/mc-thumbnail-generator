@@ -12,5 +12,7 @@ export const SERVICES: Record<string, symbol> = {
   CONFIG: Symbol('Config'),
   TRACER: Symbol('Tracer'),
   METER: Symbol('Meter'),
+  PUPPETEER_OPERATIONS: Symbol('PuppeteerOperations'),
+  SEARCH_LAYER_OPERATIONS: Symbol('SearchLayersOperations'),
 };
 /* eslint-enable @typescript-eslint/naming-convention */

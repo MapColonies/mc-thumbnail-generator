@@ -38,5 +38,12 @@
         }
       }
     }
+  },
+  "kubernetes": {
+    "namespace": "K8S_NAMESPACE",
+    "loadConfigFromCluster": {
+      "__name": "K8S_LOAD_CONFIG_FROM_CLUSTER",
+      "__format": "boolean"
+    }
   }
 }

@@ -6,9 +6,10 @@ import jsLogger, { LoggerOptions } from '@map-colonies/js-logger';
 import { Metrics } from '@map-colonies/telemetry';
 import { SERVICES, SERVICE_NAME } from './common/constants';
 import { tracing } from './common/tracing';
-import { resourceNameRouterFactory, RESOURCE_NAME_ROUTER_SYMBOL } from './resourceName/routes/resourceNameRouter';
 import { InjectionObject, registerDependencies } from './common/dependencyRegistration';
-import { anotherResourceRouterFactory, ANOTHER_RESOURECE_ROUTER_SYMBOL } from './anotherResource/routes/anotherResourceRouter';
+import PuppeteerOperations from './common/utils/PuppeteerOperations';
+import { GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL, getThumbnailGeneratorRouterFactory} from './thumbnailGenerator/routes/getThumbnailGeneratorRouter';
+import SearchLayersOperations from './common/utils/SearchLayersOperations';
 
 export interface RegisterOptions {
   override?: InjectionObject<unknown>[];
@@ -26,13 +27,17 @@ export const registerExternalValues = (options?: RegisterOptions): DependencyCon
   tracing.start();
   const tracer = trace.getTracer(SERVICE_NAME);
 
+  const puppeteerOps = new PuppeteerOperations(logger, config);
+  const searchLayerOps = new SearchLayersOperations(logger, config);
+
   const dependencies: InjectionObject<unknown>[] = [
     { token: SERVICES.CONFIG, provider: { useValue: config } },
     { token: SERVICES.LOGGER, provider: { useValue: logger } },
     { token: SERVICES.TRACER, provider: { useValue: tracer } },
     { token: SERVICES.METER, provider: { useValue: meter } },
-    { token: RESOURCE_NAME_ROUTER_SYMBOL, provider: { useFactory: resourceNameRouterFactory } },
-    { token: ANOTHER_RESOURECE_ROUTER_SYMBOL, provider: { useFactory: anotherResourceRouterFactory } },
+    { token: SERVICES.PUPPETEER_OPERATIONS, provider: { useValue: puppeteerOps } },
+    { token: SERVICES.SEARCH_LAYER_OPERATIONS, provider: { useValue: searchLayerOps } },
+    { token: GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL, provider: { useFactory: getThumbnailGeneratorRouterFactory } },
     {
       token: 'onSignal',
       provider: {

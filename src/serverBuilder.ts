@@ -9,8 +9,7 @@ import { Logger } from '@map-colonies/js-logger';
 import httpLogger from '@map-colonies/express-access-log-middleware';
 import { SERVICES } from './common/constants';
 import { IConfig } from './common/interfaces';
-import { RESOURCE_NAME_ROUTER_SYMBOL } from './resourceName/routes/resourceNameRouter';
-import { ANOTHER_RESOURECE_ROUTER_SYMBOL } from './anotherResource/routes/anotherResourceRouter';
+import { GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL } from './thumbnailGenerator/routes/getThumbnailGeneratorRouter';
 
 @injectable()
 export class ServerBuilder {
@@ -19,8 +18,7 @@ export class ServerBuilder {
   public constructor(
     @inject(SERVICES.CONFIG) private readonly config: IConfig,
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
-    @inject(RESOURCE_NAME_ROUTER_SYMBOL) private readonly resourceNameRouter: Router,
-    @inject(ANOTHER_RESOURECE_ROUTER_SYMBOL) private readonly anotherResourceRouter: Router
+    @inject(GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL) private readonly thumbnailGeneratorRouter: Router
   ) {
     this.serverInstance = express();
   }
@@ -40,8 +38,7 @@ export class ServerBuilder {
   }
 
   private buildRoutes(): void {
-    this.serverInstance.use('/resourceName', this.resourceNameRouter);
-    this.serverInstance.use('/anotherResource', this.anotherResourceRouter);
+    this.serverInstance.use(this.thumbnailGeneratorRouter);
     this.buildDocsRoutes();
   }
 
@@ -56,7 +53,7 @@ export class ServerBuilder {
 
     const ignorePathRegex = new RegExp(`^${this.config.get<string>('openapiConfig.basePath')}/.*`, 'i');
     const apiSpecPath = this.config.get<string>('openapiConfig.filePath');
-    this.serverInstance.use(OpenApiMiddleware({ apiSpec: apiSpecPath, validateRequests: true, ignorePaths: ignorePathRegex }));
+    // this.serverInstance.use(OpenApiMiddleware({ apiSpec: apiSpecPath, validateRequests: true, ignorePaths: ignorePathRegex }));
   }
 
   private registerPostRoutesMiddleware(): void {
