@@ -31,41 +31,41 @@ class SearchLayersOperations {
   }
 
   public async getLayerUrl(productId: string, productType: string): Promise<string> {
-    const searchRecordsRes = await this.getLayersForRecord(productType);
-    const relevantLayerMetadata = (get(searchRecordsRes, 'data.search') as Record<string, unknown>[]).find(
-      (record) => record.productId === productId
-    );
-      console.log('here?', relevantLayerMetadata, 'productType', productType)
-    if (productType !== 'RECORD_3D') {
-      const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === 'WMTS_LAYER');
-      console.log('wmts', linkWMTS)
-      const bffGetCapabilities = await axios.post('http://localhost:8080/graphql', {
-        query:
-          'query capabilities($params: CapabilitiesLayersSearchParams!) { capabilities(params: $params) {\n        __typename\nid\nstyle\nformat\ntileMatrixSet\nid\n\n      } }',
-        variables: {
-          params: {
-            data: [
-              {
-                recordType: productType,
-                idList: [get(linkWMTS, 'name') as string],
-              },
-            ],
+    try {
+      const searchRecordsRes = await this.getLayersForRecord(productType);
+      const relevantLayerMetadata = (get(searchRecordsRes, 'data.search') as Record<string, unknown>[]).find(
+        (record) => record.productId === productId
+      );
+  
+      if (productType !== 'RECORD_3D') {
+        const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === 'WMTS_LAYER');
+        const bffGetCapabilities = await axios.post('http://localhost:8080/graphql', {
+          query:
+            'query capabilities($params: CapabilitiesLayersSearchParams!) { capabilities(params: $params) {\n__typename\nid\nstyle\nformat\ntileMatrixSet\nid\n\n}}',
+          variables: {
+            params: {
+              data: [
+                {
+                  recordType: productType,
+                  idList: [get(linkWMTS, 'name') as string],
+                },
+              ],
+            },
           },
-        },
-      });
-
-      const layerCapability = bffGetCapabilities.data as Record<string, unknown>;
-      console.log('layerCapability', layerCapability)
-
-
-      const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
-      console.log('tileMatrixSet', tileMatrixSet)
-
-      return (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
+        });
+  
+        const layerCapability = bffGetCapabilities.data as Record<string, unknown>;
+        const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
+  
+        return (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
+      }
+      const link = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === '3DTiles')?.url as string;
+  
+      return link;
+    } catch(e) {
+      throw new Error(`There was an error targeting the requested product.`);
     }
-    const link = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === '3DTiles')?.url as string;
-
-    return link;
+    
   }
 }
 

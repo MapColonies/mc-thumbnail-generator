@@ -18,6 +18,7 @@
     "prebuild": "npm run clean",
     "build": "tsc --project tsconfig.build.json  && npm run assets:copy",
     "start": "npm run build && cd dist && node ./index.js",
+    "start-dev": "npx tsc-watch --project tsconfig.build.json --onsuccess \"node ./dist/index.js\"",
     "assets:copy": "copyfiles -f ./config/* ./dist/config && copyfiles -f ./openapi3.yaml ./dist/ && copyfiles ./package.json dist",
     "clean": "rimraf dist",
     "install": "npx husky install"
@@ -62,6 +63,7 @@
     "lodash": "^4.17.21",
     "puppeteer": "^14.3.0",
     "reflect-metadata": "^0.1.13",
+    "tsc-watch": "^5.0.3",
     "tsyringe": "^4.7.0"
   },
   "devDependencies": {

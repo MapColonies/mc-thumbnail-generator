@@ -10,27 +10,22 @@ type GetLayerScreenshots = RequestHandler<undefined>;
 
 @injectable()
 export default class ThumbnailGeneratorController {
-  private readonly namespace: string;
 
   public constructor(
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
     @inject(SERVICES.PUPPETEER_OPERATIONS) private readonly puppeteerOps: PuppeteerOperations,
     @inject(SERVICES.SEARCH_LAYER_OPERATIONS) private readonly searchLayerOps: SearchLayersOperations,
     @inject(SERVICES.CONFIG) private readonly config: IConfig
-  ) {
-    this.namespace = this.config.get<string>('kubernetes.namespace');
-  }
+  ) {}
 
   public getLayerScreenShots: GetLayerScreenshots = async (req, res, next) => {
     try {
-      const {productId, productType} = req.query;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      // const response = await this.searchLayerOps.getLayersForRecord();
-      const response = await this.searchLayerOps.getLayerUrl(productId as string, productType as string);
-      // await this.puppeteerOps.getLayerScreenshots();
+      const {productId, productType} = req.query as Record<string, string>;
+      const recordUrl = await this.searchLayerOps.getLayerUrl(productId, productType);
 
-      // eslint-disable-next-line
-      res.send(response)
+      await this.puppeteerOps.getLayerScreenshots(recordUrl, productType);
+
+      res.send('OK!');
     } catch (e) {
       next(e);
     }
