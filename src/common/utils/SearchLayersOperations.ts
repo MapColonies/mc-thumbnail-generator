@@ -10,7 +10,7 @@ class SearchLayersOperations {
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {}
 
   public async getLayersForRecord(productType = 'RECORD_RASTER'): Promise<Record<string, unknown>> {
-    const bffSearchQueryRes = await axios.post('http://localhost:8080/graphql', {
+    const bffSearchQueryRes = await axios.post('http://localhost:3000/graphql', {
       query:
         'query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {\n__typename\n... on Layer3DRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n\n... on LayerDemRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}} }',
       variables: {
@@ -39,7 +39,7 @@ class SearchLayersOperations {
   
       if (productType !== 'RECORD_3D') {
         const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === 'WMTS_LAYER');
-        const bffGetCapabilities = await axios.post('http://localhost:8080/graphql', {
+        const bffGetCapabilities = await axios.post('http://localhost:3000/graphql', {
           query:
             'query capabilities($params: CapabilitiesLayersSearchParams!) { capabilities(params: $params) {\n__typename\nid\nstyle\nformat\ntileMatrixSet\nid\n\n}}',
           variables: {
