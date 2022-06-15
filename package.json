@@ -26,6 +26,9 @@
   "directories": {
     "test": "tests"
   },
+  "watch": {
+    "ignore": ""
+  },
   "author": "MapColonies",
   "license": "ISC",
   "husky": {
@@ -51,9 +54,14 @@
     "@opentelemetry/api-metrics": "0.23.0",
     "@opentelemetry/instrumentation-express": "0.23.0",
     "@opentelemetry/instrumentation-http": "0.23.0",
+    "@types/adm-zip": "^0.5.0",
+    "@types/archiver": "^5.3.1",
     "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.182",
     "@types/puppeteer": "^5.4.6",
+    "@types/turf": "^3.5.32",
+    "adm-zip": "^0.5.9",
+    "archiver": "^5.3.1",
     "axios": "^0.27.2",
     "compression": "^1.7.4",
     "config": "^3.3.7",
@@ -64,7 +72,8 @@
     "puppeteer": "^14.3.0",
     "reflect-metadata": "^0.1.13",
     "tsc-watch": "^5.0.3",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "turf": "^3.0.14"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.1",
