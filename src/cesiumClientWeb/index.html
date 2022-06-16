@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thumbnail Presentor</title>
+    <script src="scripts/Cesium/Cesium.js"></script>
+    <script src="scripts/@turf/turf/turf.min.js"></script>
+    <script src="./script.js" defer></script>
+    <style>
+        @import url("scripts/Cesium/Widgets/widgets.css");
+        @import url("public/fonts/mc-icons/style.css");
+        
+       * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .cesium-viewer-toolbar, .cesium-widget-credits, .cesium-viewer-fullscreenContainer {
+            display: none !important;
+        }
+
+        #layerIcon {
+            position: absolute;
+            top: 3vw;
+            left: 3vw;
+            font-size:calc(12px + 3vw);
+            color:black;
+            filter: drop-shadow(0 0 0.5rem rgb(255,255,255));
+            z-index: 10;
+        }
+
+        #cesiumContainer{
+            width: 100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+</body>
+</html>

@@ -112,3 +112,4 @@ jest_html_reporters.html
 reports
 
 src/common/temp
+src/cesiumClientWeb/scripts
