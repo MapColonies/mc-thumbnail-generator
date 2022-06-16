@@ -39,11 +39,13 @@
       }
     }
   },
-  "kubernetes": {
-    "namespace": "K8S_NAMESPACE",
-    "loadConfigFromCluster": {
-      "__name": "K8S_LOAD_CONFIG_FROM_CLUSTER",
-      "__format": "boolean"
-    }
+  "thumbnailGenerator": {
+    "zipName": "THUMBNAIL_GENERATOR_ZIP_NAME",
+    "tempLocation": "THUMBNAIL_GENERATOR_TEMP_LOCATION",
+    "tempScreenshotLocation": "THUMBNAIL_GENERATOR_TEMP_SCREENSHOT_LOCATION",
+    "thumbnailPresentorUrl": "THUMBNAIL_GENERATOR_THUMBNAIL_PRESENTOR_URL",
+    "targetIconId": "THUMBNAIL_GENERATOR_TARGET_ICON_ID",
+    "cesiumContainerId": "THUMBNAIL_GENERATOR_CESIUM_CONTAINER_ID",
+    "bffUrl": "THUMBNAIL_GENERATOR_BFF_URL"
   }
 }

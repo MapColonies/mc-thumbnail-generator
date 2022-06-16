@@ -5,16 +5,22 @@ import { get } from 'lodash';
 import axios from 'axios';
 import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
+import { ProductType } from '../../thumbnailGenerator/models/ProductType';
+import { Protocols } from '../../thumbnailGenerator/models/Protocols';
+
 
 @injectable()
 class SearchLayersOperations {
-  public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {}
+  private readonly bffUrl: string;
 
-  public async getLayersForRecord(productType: string): Promise<Record<string, unknown>> {
+  public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
+    this.bffUrl = this.config.get("thumbnailGenerator.bffUrl");
+  }
+
+  public async getLayersForRecord(productType: ProductType): Promise<Record<string, unknown>> {
     this.logger.info(`[SearchLayersOperations][getLayersForRecord] Searching layers for product ${productType}`);
-
     try {
-      const bffSearchQueryRes = await axios.post('http://localhost:8080/graphql', {
+      const bffSearchQueryRes = await axios.post(this.bffUrl, {
         query:
           'query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {\n__typename\n... on Layer3DRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n\n... on LayerDemRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}} }',
         variables: {
@@ -34,23 +40,25 @@ class SearchLayersOperations {
       return bffSearchQueryRes.data as Record<string, unknown>;
     } catch (e) {
       this.logger.error(`[SearchLayersOperations][getLayersForRecord] There was an error getting records for product ${productType}.`);
-      throw new Error(`There was an error getting records for product ${productType}.`)
+      throw new Error(`There was an error getting records for product ${productType}.`);
     }
   }
 
-  public async getLayerUrl(productId: string, productType: string): Promise<{ url: string; bbox?: number[] }> {
+  public async getLayerUrl(productId: string, productType: ProductType): Promise<{ url: string; bbox?: number[] }> {
     try {
-      this.logger.info(`[SearchLayersOperations][getLayerUrl] Targeting the requested product '${productId}'.`);
+      this.logger.info(`[SearchLayersOperations][getLayerUrl] Gatting url for layer '${productId}'.`);
 
       const searchRecordsRes = await this.getLayersForRecord(productType);
       const relevantLayerMetadata = (get(searchRecordsRes, 'data.search') as Record<string, unknown>[]).find(
         (record) => record.productId === productId
       );
 
-      if (productType !== 'RECORD_3D') {
-        const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === 'WMTS_LAYER');
-        
-        const bffGetCapabilities = await axios.post('http://localhost:8080/graphql', {
+      if (productType !== ProductType.RECORD_3D) {
+        const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find(
+          (link) => link.protocol === Protocols.RASTER_LAYER_PROTOCOL
+        );
+
+        const bffGetCapabilities = await axios.post(this.bffUrl, {
           query:
             'query capabilities($params: CapabilitiesLayersSearchParams!) { capabilities(params: $params) {\n__typename\nid\nstyle\nformat\ntileMatrixSet\nid\n\n}}',
           variables: {
@@ -70,9 +78,11 @@ class SearchLayersOperations {
         const url = (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
         // @ts-ignore
         const bbox = Turf.bbox(get(relevantLayerMetadata, 'footprint'));
+
         return { url, bbox };
       }
-      const url = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === '3DTiles')?.url as string;
+      const url = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === Protocols.TILESET_3D_PROTOCOL)
+        ?.url as string;
 
       return { url };
     } catch (e) {

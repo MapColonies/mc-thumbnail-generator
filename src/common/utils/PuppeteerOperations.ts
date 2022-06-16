@@ -1,8 +1,6 @@
 import fs from 'fs/promises';
 import fsSync from 'fs';
-import Path from 'path';
 import archiver from 'archiver';
-import AdmZip from 'adm-zip';
 import { Logger } from '@map-colonies/js-logger';
 import Puppeteer from 'puppeteer';
 import { inject, injectable } from 'tsyringe';
@@ -15,14 +13,15 @@ enum ThumbnailSizes {
   LARGE = 'lg',
 }
 
-const TEMP_LOCATION = Path.resolve('src/common/temp');
-const TARGET_ICON_ID = '#layerIcon';
-const CESIUM_CONTAINER_ID = '#cesiumContainer';
-
 @injectable()
 class PuppeteerOperations {
+  private readonly tempLocation: string;
+  private readonly tempScreenshotLocation: string;
+  private readonly tempZipLocation: string;
+  private readonly thumbnailPresentorUrl: string;
+  private readonly targetIconId: string;
+  private readonly cesiumContainerId: string;
   private readonly thumbnailSizes: Record<ThumbnailSizes, Puppeteer.Viewport>;
-  // private readonly zipArchive: AdmZip;
 
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
     this.thumbnailSizes = {
@@ -40,7 +39,12 @@ class PuppeteerOperations {
       },
     };
 
-    // this.zipArchive = new AdmZip(undefined);
+    this.tempLocation = this.config.get('thumbnailGenerator.tempLocation');
+    this.tempScreenshotLocation = this.config.get('thumbnailGenerator.tempScreenshotLocation');
+    this.tempZipLocation = `${this.tempLocation}/${this.config.get<string>('thumbnailGenerator.zipName')}`;
+    this.thumbnailPresentorUrl = this.config.get('thumbnailGenerator.thumbnailPresentorUrl');
+    this.targetIconId = this.config.get('thumbnailGenerator.targetIconId');
+    this.cesiumContainerId = this.config.get('thumbnailGenerator.cesiumContainerId');
   }
 
   public async getLayerScreenshots(
@@ -58,24 +62,21 @@ class PuppeteerOperations {
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
 
+      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
+
       for (const [sizeName, viewPortSize] of Object.entries(this.thumbnailSizes)) {
         const page = await browser.newPage();
         await page.setViewport(viewPortSize);
-        await page.goto(`http://localhost:4000/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`);
-        console.log(`http://localhost:4000/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`);
-        await page.waitForSelector(TARGET_ICON_ID);
-        const cesiumElem = await page.$(CESIUM_CONTAINER_ID);
-        await fs.mkdir(`${TEMP_LOCATION}/screenshots`, { recursive: true });
-        await cesiumElem?.screenshot({ path: `${TEMP_LOCATION}/screenshots/${productId}-thumbnail-${sizeName}.png` });
+        await page.goto(thumbnailPresentorUrl);
+        await page.waitForSelector(this.targetIconId);
+        const cesiumElem = await page.$(this.cesiumContainerId);
+        await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
+        await cesiumElem?.screenshot({ path: `${this.tempScreenshotLocation}/${productId}-thumbnail-${sizeName}.png` });
       }
-      // await this.zipArchive.addLocalFolderPromise(TEMP_SCREENSHOTS_LOCATION, {});
       await browser.close();
-      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
-      // const zipBuffer = await this.zipArchive.toBufferPromise();
-      const zipReadStream = await this.createZipStream();
 
-      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Cleaning temp files.`);
-      await fs.rm(`${TEMP_LOCATION}/screenshots`, { recursive: true });
+      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
+      const zipReadStream = await this.createZipStream();
 
       return zipReadStream;
     } catch (e) {
@@ -84,18 +85,25 @@ class PuppeteerOperations {
       throw new Error('There was an error creating the thumbnails.');
     }
   }
+
+  public async cleanTempFiles(): Promise<void> {
+    this.logger.info(`[PuppeteerOperations][cleanTempFiles] Cleaning temp files.`);
+
+    await fs.rm(this.tempLocation, { recursive: true });
+  }
+
   private async createZipStream(): Promise<fsSync.ReadStream> {
     return new Promise((resolve, reject) => {
-      const writeable = fsSync.createWriteStream(`${TEMP_LOCATION}/thumbnails.zip`);
+      const writeable = fsSync.createWriteStream(this.tempZipLocation);
       const archive = archiver('zip', {
-        zlib: { level: 9 }, // Sets the compression level.
+        zlib: { level: 9 },
       });
-      
+
       writeable.on('close', function () {
         const readStream = fsSync.createReadStream(writeable.path);
         resolve(readStream);
       });
-      
+
       archive.on('warning', (err) => {
         if (err.code === 'ENOENT') {
           this.logger.warn(`[PuppeteerOperations][createZipStream] Generating zip warning: ${err.message}`);
@@ -105,8 +113,8 @@ class PuppeteerOperations {
       });
 
       archive.pipe(writeable);
-      archive.directory(`${TEMP_LOCATION}/screenshots`, false);
-      
+      archive.directory(this.tempScreenshotLocation, false);
+
       void archive.finalize();
     });
   }
