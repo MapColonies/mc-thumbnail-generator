@@ -17,6 +17,11 @@ data:
   {{ end }}
   {{ if .Values.env.metrics.enabled }}
   TELEMETRY_METRICS_ENABLED: 'true'
-  TELEMETRY_METRICS_URL: {{ $metricsUrl }}
+  THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.env.thumbnailGenerator.zipName }}
+  SERVICE_URL: {{ quote .Values.discreteClient.env.SERVICE_URL }}
+  ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.globalClientApp.env.ACCESS_TOKEN_ATTRIBUTE_NAME }}
+  ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.globalClientApp.env.ACCESS_TOKEN_INJECTION_TYPE }}
+  ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.globalClientApp.env.ACCESS_TOKEN_TOKEN_VALUE }}
+  DEFAULT_AOI_BBOX_POINTS: {{ quote .Values.thumbnailGenerator.defaultAOIBBoxPoints }}
   {{ end }}
 {{- end }}

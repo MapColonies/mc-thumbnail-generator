@@ -46,6 +46,10 @@
     "thumbnailPresentorUrl": "THUMBNAIL_GENERATOR_THUMBNAIL_PRESENTOR_URL",
     "targetIconId": "THUMBNAIL_GENERATOR_TARGET_ICON_ID",
     "cesiumContainerId": "THUMBNAIL_GENERATOR_CESIUM_CONTAINER_ID",
-    "bffUrl": "THUMBNAIL_GENERATOR_BFF_URL"
+    "bffUrl": "SERVICE_URL",
+    "token": "ACCESS_TOKEN_TOKEN_VALUE",
+    "tokenInjectionType": "ACCESS_TOKEN_INJECTION_TYPE",
+    "tokenAttributeName": "ACCESS_TOKEN_ATTRIBUTE_NAME",
+    "defaultAOIBBoxPoints": "DEFAULT_AOI_BBOX_POINTS"
   }
 }

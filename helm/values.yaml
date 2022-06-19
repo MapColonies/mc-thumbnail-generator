@@ -12,7 +12,7 @@ nodePort: 30030 #for minikube deployment only
 resetOnConfigChange: true
 
 cloudProvider:
-  dockerRegistryUrl: my-registry-url.io
+  dockerRegistryUrl: "localhost:5001"
   imagePullSecretName: 'my-registry-secret'
   flavor: openshift
 
@@ -22,11 +22,11 @@ caKey: 'ca.crt'
 
 image:
   repository: mc-thumbnail-generator
-  tag: 'latest'
+  tag: 'v2.0.2'
 
 env:
-  port: 8080
-  targetPort: 8080
+  port: 80
+  targetPort: 3000
   protocol: TCP
   logLevel: info
   logPrettyPrintEnabled: false
@@ -40,7 +40,7 @@ env:
     url: http://localhost:55681/v1/metrics
 
 resources:
-  enabled: true
+  enabled: false
   value:
     limits:
       cpu: 100m
@@ -50,7 +50,7 @@ resources:
       memory: 128Mi
 
 route:
-  enabled: true
+  enabled: false
   path: /
   timeout:
     enabled: false # defaults to 30s by openshift
@@ -63,3 +63,6 @@ ingress:
   cors:
     enabled: true
     origin: '*'
+
+thumbnailGenerator:
+  defaultAOIBBoxPoints: "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"

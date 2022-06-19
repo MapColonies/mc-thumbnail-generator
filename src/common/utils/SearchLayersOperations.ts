@@ -1,4 +1,4 @@
-import Turf from 'turf';
+import BBox from '@turf/bbox';
 import { Logger } from '@map-colonies/js-logger';
 import { inject, injectable } from 'tsyringe';
 import { get } from 'lodash';
@@ -73,11 +73,11 @@ class SearchLayersOperations {
           },
         });
 
-        const layerCapability = bffGetCapabilities.data as Record<string, unknown>;
+        const layerCapability = bffGetCapabilities.data as Record<string, unknown>;        
         const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
         const url = (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
         // @ts-ignore
-        const bbox = Turf.bbox(get(relevantLayerMetadata, 'footprint'));
+        const bbox = BBox(get(relevantLayerMetadata, 'footprint'));
 
         return { url, bbox };
       }

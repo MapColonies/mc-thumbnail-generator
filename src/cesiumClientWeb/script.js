@@ -1,17 +1,31 @@
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZCI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJpYXQiOjE1MTYyMzkwMjJ9.EnuWfcbCXkI8EEqdjcBb9SRSintpBZ6chLb6Odk_FzY';
-const tokenHeader = { 'X-API-KEY': TOKEN };
-const tokenQueryParam = { token: TOKEN };
+const config = require('config');
+const { ProductType } = require('../thumbnailGenerator/models/ProductType');
+const TOKEN = config.get('thumbnailGenerator.token');
 const URL_PARAM = 'url';
 const PRODUCT_TYPE_PARAM = 'productType';
 const BBOX_PARAM = 'bbox';
-const PRODUCT_TYPE_RASTER = 'RECORD_RASTER';
-const PRODUCT_TYPE_3D = 'RECORD_3D';
 const MAX_APPROPRIATE_ZOOM_KM = 1;
 const CONSIDERED_BIG_MODEL = 3;
 const DEFAULT_AOI_BBOX_POINTS = JSON.parse(
-    '[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]'
+    config.get('thumbnailGenerator.defaultAOIBBoxPoints')
 );
 const MIN_AOI_TO_BBOX_RATIO = 0.2;
+const INJECTION_TYPE =  config.get('thumbnailGenerator.tokenInjectionType');
+
+const getAuthObject = () => {
+  const tokenProps = {};
+  if (INJECTION_TYPE.toLowerCase() === 'header') {
+    tokenProps.headers = {
+      'X-API-KEY': TOKEN
+    };
+  } else if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
+    tokenProps.queryParameters = {
+      'token': TOKEN
+    };
+  }
+  return tokenProps;
+
+}
 
 // Setup Cesium viewer first.
 const viewer = new Cesium.Viewer('cesiumContainer', {
@@ -53,10 +67,10 @@ const appendIconByProductType = productType => {
   let iconClassName;
 
   switch (productType) {
-    case PRODUCT_TYPE_3D:
+    case ProductType.RECORD_3D:
       iconClassName = 'mc-icon-Map-3D';
       break;
-    case PRODUCT_TYPE_RASTER:
+    case ProductType.RECORD_RASTER:
       iconClassName = 'mc-icon-Map-Raster';
       break;
     default:
@@ -167,8 +181,7 @@ const render3DTileset = () => {
         new Cesium.Cesium3DTileset({
           url: new Cesium.Resource({
             url,
-            queryParameters: { ...tokenQueryParam }
-                // headers: tokenHeader
+            ...getAuthObject()
           })
         })
     );
@@ -182,41 +195,51 @@ const render3DTileset = () => {
 const renderRasterLayer = () => {
   viewer.scene.mode = Cesium.SceneMode.SCENE2D;
 
+  const rectWithBuffers = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
+  rect.east = rect.east + rect.width * 0.5;
+  rect.west = rect.west - rect.width * 0.5;
+
   const provider = new Cesium.WebMapTileServiceImageryProvider({
     url: new Cesium.Resource({
       url,
-      queryParameters: { ...tokenQueryParam }
-            // headers: tokenHeader
+      ...getAuthObject()
     }),
-    rectangle: Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox))),
+    rectangle: rectWithBuffers,
     tilingScheme: new Cesium.GeographicTilingScheme()
         // style: 'default',
         // format: 'image/jpeg',
         // tileMatrixSetID:'libotGrid'
   });
 
-  const layer = viewer.imageryLayers.addImageryProvider(provider);
+  viewer.imageryLayers.addImageryProvider(provider);
+  const rectangle = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
 
-  return viewer.flyTo(layer, { duration: 0 });
+  return new Promise(resolve => {
+    viewer.camera.flyTo({
+      destination: rectangle, 
+      duration: 0,
+      complete: resolve
+    });
+  })
 };
 
 // Render products
 
 switch (productType) {
-  case PRODUCT_TYPE_3D: {
+  case ProductType.RECORD_3D: {
     render3DTileset()
             .then(setCameraToProperHeightAndPos)
             .then(tilesLoadedPromise)
             .then(() => {
-              appendIconByProductType(PRODUCT_TYPE_3D);
+              appendIconByProductType(ProductType.RECORD_3D);
             });
 
     break;
   }
-  case PRODUCT_TYPE_RASTER: {
+  case ProductType.RECORD_RASTER: {
     renderRasterLayer()
             .then(tilesLoadedPromise)
-            .then(() => appendIconByProductType(PRODUCT_TYPE_RASTER));
+            .then(() => appendIconByProductType(ProductType.RECORD_RASTER));
 
     break;
   }
