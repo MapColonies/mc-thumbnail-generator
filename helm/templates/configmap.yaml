@@ -19,7 +19,7 @@ data:
     TELEMETRY_METRICS_ENABLED: 'true'
     TELEMETRY_METRICS_URL: {{ $metricsUrl }}
   {{ end }}
-  THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.env.thumbnailGenerator.zipName }}
+  THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.thumbnailGenerator.zipName }}
   SERVICE_URL: {{ quote .Values.thumbnailGenerator.serviceUrl }}
   ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.global.clientApp.accessTokenAttributeName }}
   ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.global.clientApp.accessTokenInjectionType }}
