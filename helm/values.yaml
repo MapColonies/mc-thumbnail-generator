@@ -33,7 +33,7 @@ caKey: 'ca.crt'
 
 image:
   repository: mc-thumbnail-generator
-  tag: 'v2.0.2'
+  tag: 'v1.0.8'
 
 env:
   port: 80
