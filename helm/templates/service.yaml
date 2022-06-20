@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}-{{ $chartName }}
+  name: {{ $releaseName }}
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}
@@ -27,6 +27,6 @@ spec:
   selector:
     app: {{ $chartName }}
     release: {{ $releaseName }}
-    run: {{ $releaseName }}-{{ $chartName }}
+    run: {{ $releaseName }}
     {{- include "mc-thumbnail-generator.selectorLabels" . | nindent 4 }}
 {{- end }}

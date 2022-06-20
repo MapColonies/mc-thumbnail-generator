@@ -18,6 +18,7 @@
     "prebuild": "npm run clean",
     "build": "tsc --project tsconfig.build.json  && npm run assets:copy",
     "start": "concurrently --raw \"npm:start:thumbnail-generator\" \"npm:build && cd dist && node ./index.js\"",
+    "start-prod": "concurrently --raw \"npm:start:thumbnail-generator\" \"cd dist && node ./index.js\"",
     "start:thumbnail-generator": "http-server ./src/cesiumClientWeb --port 4000 --silent",
     "start-dev": "npx tsc-watch --project tsconfig.build.json --onsuccess \"node ./dist/index.js\"",
     "assets:copy": "copyfiles -f ./config/* ./dist/config && copyfiles -f ./openapi3.yaml ./dist/ && copyfiles ./package.json dist",
@@ -63,7 +64,6 @@
     "@opentelemetry/instrumentation-http": "0.23.0",
     "@turf/turf": "^6.5.0",
     "@types/archiver": "^5.3.1",
-    "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.182",
     "@types/puppeteer": "^5.4.6",
     "archiver": "^5.3.1",
@@ -80,8 +80,7 @@
     "puppeteer": "^14.3.0",
     "reflect-metadata": "^0.1.13",
     "tsc-watch": "^5.0.3",
-    "tsyringe": "^4.7.0",
-    "turf": "^3.0.14"
+    "tsyringe": "^4.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.1",

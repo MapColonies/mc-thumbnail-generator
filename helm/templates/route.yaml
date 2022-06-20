@@ -15,7 +15,7 @@ spec:
   path:  {{ .Values.route.path | default "/" }}
   to:
     kind: Service
-    name: {{ $releaseName }}-{{ $chartName }}
+    name: {{ $releaseName }}
   tls:
     termination: edge
 {{- end -}}

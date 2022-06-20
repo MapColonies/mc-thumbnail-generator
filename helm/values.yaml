@@ -1,8 +1,18 @@
 global:
-  cloudProvider: {}
-  tracing: {}
-  metrics: {}
-  environment: {}
+  cloudProvider:
+    dockerRegistryUrl: "localhost:5001"
+    imagePullSecretName: 'my-registry-secret'
+    flavor: openshift
+  tracing: 
+    url: ''
+  metrics: 
+    url: ''
+  environment: ''
+  clientApp:
+    accessTokenAttributeName: 'token'
+    accessTokenInjectionType: 'queryParam'
+    accessTokenTokenValue: ''
+
 
 enabled: true
 environment: development
@@ -11,16 +21,6 @@ initialDelaySeconds: 60
 nodePort: 30030 #for minikube deployment only
 resetOnConfigChange: true
 imagePullPolicy: "Always"
-
-discreteClient:
-  env:
-    SERVICE_URL: 'http://BFF.URL'
-
-globalClientApp:
-  env:
-    ACCESS_TOKEN_ATTRIBUTE_NAME: 'token'
-    ACCESS_TOKEN_INJECTION_TYPE: 'queryParam'
-    ACCESS_TOKEN_TOKEN_VALUE: ''
 
 cloudProvider:
   dockerRegistryUrl: "localhost:5001"
@@ -61,7 +61,7 @@ resources:
       memory: 128Mi
 
 route:
-  enabled: false
+  enabled: true
   path: /
   timeout:
     enabled: false # defaults to 30s by openshift
@@ -77,3 +77,6 @@ ingress:
 
 thumbnailGenerator:
   defaultAOIBBoxPoints: "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
+  serviceUrl: 'http://bff.url'
+  zipName: 'Thumbnails.zip'
+
