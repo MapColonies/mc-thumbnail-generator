@@ -75,6 +75,7 @@ spec:
           resources:
             {{- toYaml .Values.resources.value | nindent 12 }}
           {{- end }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
       volumes:
         {{- if .Values.caSecretName }}
         - name: root-ca
