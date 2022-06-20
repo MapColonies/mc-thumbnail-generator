@@ -12,6 +12,16 @@ nodePort: 30030 #for minikube deployment only
 resetOnConfigChange: true
 imagePullPolicy: "Always"
 
+discreteClient:
+  env:
+    SERVICE_URL: 'http://BFF.URL'
+
+globalClientApp:
+  env:
+    ACCESS_TOKEN_ATTRIBUTE_NAME: 'token'
+    ACCESS_TOKEN_INJECTION_TYPE: 'queryParam'
+    ACCESS_TOKEN_TOKEN_VALUE: ''
+
 cloudProvider:
   dockerRegistryUrl: "localhost:5001"
   imagePullSecretName: 'my-registry-secret'
