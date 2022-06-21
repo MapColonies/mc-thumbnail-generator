@@ -1,16 +1,14 @@
-const config = require('config');
-const { ProductType } = require('../thumbnailGenerator/models/ProductType');
-const TOKEN = config.get('thumbnailGenerator.token');
+const TOKEN = getParameterByName('token');
 const URL_PARAM = 'url';
 const PRODUCT_TYPE_PARAM = 'productType';
 const BBOX_PARAM = 'bbox';
 const MAX_APPROPRIATE_ZOOM_KM = 1;
 const CONSIDERED_BIG_MODEL = 3;
 const DEFAULT_AOI_BBOX_POINTS = JSON.parse(
-    config.get('thumbnailGenerator.defaultAOIBBoxPoints')
+    getParameterByName('defaultAOIBBoxPoints')
 );
 const MIN_AOI_TO_BBOX_RATIO = 0.2;
-const INJECTION_TYPE =  config.get('thumbnailGenerator.tokenInjectionType');
+const INJECTION_TYPE = getParameterByName('injectionType');
 
 const getAuthObject = () => {
   const tokenProps = {};
@@ -55,7 +53,7 @@ const tilesLoadedPromise = () => {
   });
 };
 
-const getParameterByName = name => {
+function getParameterByName(name) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop)
   });
@@ -67,11 +65,11 @@ const appendIconByProductType = productType => {
   let iconClassName;
 
   switch (productType) {
-    case ProductType.RECORD_3D:
+    case 'RECORD_3D':
       iconClassName = 'mc-icon-Map-3D';
       break;
-    case ProductType.RECORD_RASTER:
-      iconClassName = 'mc-icon-Map-Raster';
+    case 'RECORD_RASTER':
+      iconClassName = 'mc-icon-Map-Orthophoto';
       break;
     default:
       iconClassName = 'mc-icon-Map-Raster';
@@ -196,8 +194,8 @@ const renderRasterLayer = () => {
   viewer.scene.mode = Cesium.SceneMode.SCENE2D;
 
   const rectWithBuffers = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
-  rect.east = rect.east + rect.width * 0.5;
-  rect.west = rect.west - rect.width * 0.5;
+  rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * 0.5;
+  rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * 0.5;
 
   const provider = new Cesium.WebMapTileServiceImageryProvider({
     url: new Cesium.Resource({
@@ -226,20 +224,20 @@ const renderRasterLayer = () => {
 // Render products
 
 switch (productType) {
-  case ProductType.RECORD_3D: {
+  case 'RECORD_3D': {
     render3DTileset()
             .then(setCameraToProperHeightAndPos)
             .then(tilesLoadedPromise)
             .then(() => {
-              appendIconByProductType(ProductType.RECORD_3D);
+              appendIconByProductType('RECORD_3D');
             });
 
     break;
   }
-  case ProductType.RECORD_RASTER: {
+  case 'RECORD_RASTER': {
     renderRasterLayer()
             .then(tilesLoadedPromise)
-            .then(() => appendIconByProductType(ProductType.RECORD_RASTER));
+            .then(() => appendIconByProductType('RECORD_RASTER'));
 
     break;
   }

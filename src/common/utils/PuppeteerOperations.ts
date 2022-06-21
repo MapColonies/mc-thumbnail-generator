@@ -22,6 +22,9 @@ class PuppeteerOperations {
   private readonly targetIconId: string;
   private readonly cesiumContainerId: string;
   private readonly thumbnailSizes: Record<ThumbnailSizes, Puppeteer.Viewport>;
+  private readonly injectionType: string;
+  private readonly defaultAOIBBoxPoints: string;
+  private readonly token: string;
 
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
     this.thumbnailSizes = {
@@ -45,6 +48,9 @@ class PuppeteerOperations {
     this.thumbnailPresentorUrl = this.config.get('thumbnailGenerator.thumbnailPresentorUrl');
     this.targetIconId = this.config.get('thumbnailGenerator.targetIconId');
     this.cesiumContainerId = this.config.get('thumbnailGenerator.cesiumContainerId');
+    this.injectionType = this.config.get('thumbnailGenerator.tokenInjectionType');
+    this.defaultAOIBBoxPoints = this.config.get('thumbnailGenerator.defaultAOIBBoxPoints');
+    this.token = this.config.get('thumbnailGenerator.token');
   }
 
   public async getLayerScreenshots(
@@ -56,19 +62,19 @@ class PuppeteerOperations {
     this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
 
     const browser = await Puppeteer.launch({
+      executablePath: '/usr/bin/google-chrome',
       args: ['--disable-web-security', '--single-process'],
     });
 
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
 
-      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
-
+      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}&injectionType=${this.injectionType}&defaultAOIBBoxPoints=${this.defaultAOIBBoxPoints}&token=${this.token}`;
       for (const [sizeName, viewPortSize] of Object.entries(this.thumbnailSizes)) {
         const page = await browser.newPage();
         await page.setViewport(viewPortSize);
         await page.goto(thumbnailPresentorUrl);
-        await page.waitForSelector(this.targetIconId);
+        await page.waitForSelector(this.targetIconId, {timeout: 60000});
         const cesiumElem = await page.$(this.cesiumContainerId);
         await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
         await cesiumElem?.screenshot({ path: `${this.tempScreenshotLocation}/${productId}-thumbnail-${sizeName}.png` });

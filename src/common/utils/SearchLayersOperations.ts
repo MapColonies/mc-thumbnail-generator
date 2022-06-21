@@ -81,8 +81,9 @@ class SearchLayersOperations {
 
         return { url, bbox };
       }
-      const url = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) => link.protocol === Protocols.TILESET_3D_PROTOCOL)
-        ?.url as string;
+      const url = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) =>
+        [Protocols.TILESET_3D_LAYER_PROTOCOL, Protocols.TILESET_3D_PROTOCOL].includes(link.protocol as Protocols)
+      )?.url as string;
 
       return { url };
     } catch (e) {
