@@ -50,6 +50,10 @@ spec:
               name: root-ca
               subPath: {{ quote .Values.caKey }}
             {{- end }}
+            - mountPath: "/home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json"
+              name: cesium-client-root-config
+              subPath: cesiumClientWebConfig.json
+              readOnly: true
           env:
             - name: SERVER_PORT
               value: {{ .Values.env.targetPort | quote }}
@@ -82,4 +86,10 @@ spec:
           secret:
             secretName: {{ .Values.caSecretName }}
         {{- end }}
+        - name: cesium-client-root-config
+          configMap:
+            name: {{ .Release.Name }}-configmap
+            items:
+            - key: "CESIUM_CLIENT_WEB_CONFIG"
+              path: "cesiumClientWebConfig.json"
 {{- end -}}

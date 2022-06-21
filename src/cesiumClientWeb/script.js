@@ -1,14 +1,15 @@
-const TOKEN = getParameterByName('token');
+const config = globalThis.CONFIG;
+const TOKEN = config.token;
 const URL_PARAM = 'url';
 const PRODUCT_TYPE_PARAM = 'productType';
 const BBOX_PARAM = 'bbox';
 const MAX_APPROPRIATE_ZOOM_KM = 1;
 const CONSIDERED_BIG_MODEL = 3;
 const DEFAULT_AOI_BBOX_POINTS = JSON.parse(
-    getParameterByName('defaultAOIBBoxPoints')
+    config.defaultAOIBBoxPoints
 );
 const MIN_AOI_TO_BBOX_RATIO = 0.2;
-const INJECTION_TYPE = getParameterByName('injectionType');
+const INJECTION_TYPE = config.injectionType;
 
 const getAuthObject = () => {
   const tokenProps = {};
@@ -49,7 +50,7 @@ const tilesLoadedPromise = () => {
         clearInterval(tilesInterval);
         resolve(tilesLoaded);
       }
-    }, 500);
+    }, 2000);
   });
 };
 
@@ -112,10 +113,10 @@ const setCameraToProperHeightAndPos = () => {
     range = MAX_APPROPRIATE_ZOOM_KM * 1000;
   }
 
-  viewer.camera.lookAt(
-        viewer.scene.primitives.get(0).boundingSphere.center,
-        new Cesium.HeadingPitchRange(heading, pitch, range)
-    );
+  // viewer.camera.lookAt(
+  //       viewer.scene.primitives.get(0).boundingSphere.center,
+  //       new Cesium.HeadingPitchRange(heading, pitch, range)
+  //   );
 };
 
 const getLayerBBoxArea = bbox => {
