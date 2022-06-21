@@ -50,7 +50,7 @@ const tilesLoadedPromise = () => {
         clearInterval(tilesInterval);
         resolve(tilesLoaded);
       }
-    }, 2000);
+    }, 500);
   });
 };
 
