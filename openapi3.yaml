@@ -1,87 +1,48 @@
 openapi: 3.0.1
 info:
-  title: service-name
-  description: basic template for map colonies service
+  title: mc-thumbnail-generator
+  description: Service to generating thumbnails of layers.
   version: 1.0.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-
 paths:
-  /anotherResource:
+  /screenshot:
     get:
-      operationId: getAnotherResource
-      tags:
-        - anotherResource
-      summary: gets the resource
+      summary: Generates zip with thumbnails for downloading.
+      parameters:
+        - in: query
+          name: productId
+          schema:
+            type: string
+          description: Layer's product ID.
+        - in: query
+          name: productType
+          schema:
+            type: string
+          description: The catalog type of the product.
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/anotherResource'
-  /resourceName:
-    get:
-      operationId: getResourceName
-      tags:
-        - resourceName
-      summary: gets the resource
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
-    post:
-      operationId: createResource
-      tags:
-        - resourceName
-      summary: creates a new record of type resource
-      responses:
-        201:
-          description: created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
-        400:
-          description: Bad Request
+                $ref: '#/components/schemas/res'
+        500:
+          description: INTERNAL SERVER ERROR
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
 components:
   schemas:
+    res:
+      type: object
+      properties:
+        data:
+          type: object
     error:
       type: object
-      required:
-        - message
       properties:
-        message:
+        error:
           type: string
-    resource:
-      type: object
-      required:
-        - id
-        - name
-        - description
-      properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-    anotherResource:
-      type: object
-      required:
-        - kind
-        - isAlive
-      properties:
-        kind:
-          type: string
-        isAlive:
-          type: boolean

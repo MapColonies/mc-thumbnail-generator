@@ -54,6 +54,18 @@ const tilesLoadedPromise = () => {
   });
 };
 
+const tilesetLoadedPromise = (tileset) => {
+  return new Promise((resolve, reject) => {
+    const tilesInterval = setInterval(() => {
+      const { tilesLoaded } = tileset;
+      if (tilesLoaded) {
+        clearInterval(tilesInterval);
+        resolve(tilesLoaded);
+      }
+    }, 500);
+  });
+};
+
 function getParameterByName(name) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop)
@@ -175,7 +187,7 @@ const url = getParameterByName(URL_PARAM);
 const productType = getParameterByName(PRODUCT_TYPE_PARAM);
 const bbox = getParameterByName(BBOX_PARAM);
 
-const render3DTileset = () => {
+const render3DTileset = async () => {
   const tileset = viewer.scene.primitives.add(
         new Cesium.Cesium3DTileset({
           url: new Cesium.Resource({
@@ -185,10 +197,12 @@ const render3DTileset = () => {
         })
     );
 
-  return viewer.flyTo(tileset, {
+  await viewer.flyTo(tileset, {
     duration: 0,
     offset: new Cesium.HeadingPitchRange(0.0, Cesium.Math.toRadians(-90))
   });
+
+  return tilesetLoadedPromise(tileset);
 };
 
 const renderRasterLayer = () => {
@@ -228,7 +242,6 @@ switch (productType) {
   case 'RECORD_3D': {
     render3DTileset()
             .then(setCameraToProperHeightAndPos)
-            .then(tilesLoadedPromise)
             .then(() => {
               appendIconByProductType('RECORD_3D');
             });

@@ -41,14 +41,6 @@ export default class ThumbnailGeneratorController {
 
         zipStream.pipe(res);
 
-        zipStream.on('close', () => {
-          this.puppeteerOps
-            .cleanTempFiles()
-            .catch((e) => {
-              this.logger.error(`[ThumbnailGeneratorController][getLayerScreenShots] There was a problem cleaning temp data. ${e as string}`);
-            });
-        });
-
         zipStream.on('error', (e) => {
           this.logger.error(`[ThumbnailGeneratorController][getLayerScreenShots] There was an error streaming the zip ${e.message}`);
           res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).send('There was an error streaming the zip');

@@ -33,7 +33,7 @@
     "targetIconId": "#layerIcon",
     "cesiumContainerId": "#cesiumContainer",
     "bffUrl": "http://localhost:8080/graphql",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZCI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJpYXQiOjE1MTYyMzkwMjJ9.EnuWfcbCXkI8EEqdjcBb9SRSintpBZ6chLb6Odk_FzY",
+    "token": "",
     "tokenInjectionType": "queryParam",
     "tokenAttributeName": "token",
     "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
