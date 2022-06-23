@@ -3,6 +3,7 @@ import fsSync from 'fs';
 import archiver from 'archiver';
 import { Logger } from '@map-colonies/js-logger';
 import Puppeteer from 'puppeteer';
+import Sharp from 'sharp';
 import { inject, injectable } from 'tsyringe';
 import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
@@ -28,6 +29,7 @@ class PuppeteerOperations {
   private readonly tempScreenshotLocation: string;
 
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
+    
     this.thumbnailSizes = {
       [ThumbnailSizes.SMALL]: {
         width: 128,
@@ -62,7 +64,7 @@ class PuppeteerOperations {
     const browser = await Puppeteer.launch({
       executablePath: '/usr/bin/google-chrome',
       args: ['--disable-web-security', '--single-process'],
-      userDataDir: './browser-cache'
+      userDataDir: './browser-cache',
     });
 
     try {
@@ -74,13 +76,21 @@ class PuppeteerOperations {
       await page.goto(thumbnailPresentorUrl);
       const thumbnails: Screenshot[] = [];
 
-      for (const [sizeName, viewPortSize] of Object.entries(this.thumbnailSizes)) {
-        await page.setViewport(viewPortSize);
-        await page.reload();
-        await page.waitForSelector(this.targetIconId, { timeout: 60000 });
-        const cesiumElem = await page.$(this.cesiumContainerId);
-        const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
-        thumbnails.push({ buffer: thumbnailBuffer as Buffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
+      const viewPortSize = {
+        width: 800,
+        height: 800
+      }
+
+      await page.setViewport(viewPortSize);
+      await page.reload();
+      await page.waitForSelector(this.targetIconId, { timeout: 60000 });
+      const cesiumElem = await page.$(this.cesiumContainerId);
+      const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
+
+      for (const [sizeName, thumbnailSize] of Object.entries(this.thumbnailSizes)) {
+        const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer).resize({...thumbnailSize}).toBuffer();
+
+        thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
       }
 
       await browser.close();

@@ -52,6 +52,8 @@ class SearchLayersOperations {
       const relevantLayerMetadata = (get(searchRecordsRes, 'data.search') as Record<string, unknown>[]).find(
         (record) => record.productId === productId
       );
+      
+      const bbox = BBox(get(relevantLayerMetadata, 'footprint'));
 
       if (productType !== ProductType.RECORD_3D) {
         const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find(
@@ -77,7 +79,6 @@ class SearchLayersOperations {
         const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
         const url = (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
         // @ts-ignore
-        const bbox = BBox(get(relevantLayerMetadata, 'footprint'));
 
         return { url, bbox };
       }
@@ -85,7 +86,8 @@ class SearchLayersOperations {
         [Protocols.TILESET_3D_LAYER_PROTOCOL, Protocols.TILESET_3D_PROTOCOL].includes(link.protocol as Protocols)
       )?.url as string;
 
-      return { url };
+      return { url, bbox };
+      
     } catch (e) {
       this.logger.error(`[SearchLayersOperations][getLayerUrl] There was an error targeting the requested product '${productId}'.`);
       throw new Error(`There was an error targeting the requested product '${productId}'.`);

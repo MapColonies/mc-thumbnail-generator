@@ -55,15 +55,9 @@ const tilesLoadedPromise = () => {
 };
 
 const tilesetLoadedPromise = (tileset) => {
-  return new Promise((resolve, reject) => {
-    const tilesInterval = setInterval(() => {
-      const { tilesLoaded } = tileset;
-      if (tilesLoaded) {
-        clearInterval(tilesInterval);
-        resolve(tilesLoaded);
-      }
-    }, 500);
-  });
+  return new Promise((resolve)=>{
+    tileset.allTilesLoaded.addEventListener(resolve);
+  })
 };
 
 function getParameterByName(name) {
@@ -116,20 +110,30 @@ const getCameraHeight = () => {
   return Math.round(height * 0.001); // KM
 };
 
-const setCameraToProperHeightAndPos = () => {
-  const heading = Cesium.Math.toRadians(0.0);
-  const pitch = Cesium.Math.toRadians(-15.0);
-  let range = viewer.scene.primitives.get(0).boundingSphere.radius;
+// const setCameraToProperHeightAndPos = () => {
+//   const heading = Cesium.Math.toRadians(0.0);
+//   const pitch = Cesium.Math.toRadians(-15.0);
+//   let range = viewer.scene.primitives.get(0).boundingSphere.radius;
 
-  if (getExtentSize() >= CONSIDERED_BIG_MODEL) {
-    range = MAX_APPROPRIATE_ZOOM_KM * 1000;
-  }
+//   // if (getExtentSize() >= CONSIDERED_BIG_MODEL) {
+//   //   range = MAX_APPROPRIATE_ZOOM_KM * 1000;
+//   // }
 
-  // viewer.camera.lookAt(
-  //       viewer.scene.primitives.get(0).boundingSphere.center,
-  //       new Cesium.HeadingPitchRange(heading, pitch, range)
-  //   );
-};
+//   // viewer.camera.lookAt(
+//   //       viewer.scene.primitives.get(0).boundingSphere.center,
+//   //       new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-90), range * 1.2)
+//   //   );
+
+//   const rectWithBuffers = Cesium.Rectangle.fromDegrees(...JSON.parse(bbox));
+
+//   return new Promise(resolve => {
+//     viewer.camera.flyTo({
+//       destination: rectWithBuffers, 
+//       duration: 0,
+//       complete: resolve
+//     });
+//   })
+// };
 
 const getLayerBBoxArea = bbox => {
   const bboxPolygon = turf.bboxPolygon(bbox);
@@ -197,10 +201,15 @@ const render3DTileset = async () => {
         })
     );
 
-  await viewer.flyTo(tileset, {
-    duration: 0,
-    offset: new Cesium.HeadingPitchRange(0.0, Cesium.Math.toRadians(-90))
-  });
+  const rectWithBuffers = Cesium.Rectangle.fromDegrees(...JSON.parse(bbox));
+
+  await new Promise(resolve => {
+    viewer.camera.flyTo({
+      destination: rectWithBuffers, 
+      duration: 0,
+      complete: resolve
+    });
+  })
 
   return tilesetLoadedPromise(tileset);
 };
@@ -241,7 +250,7 @@ const renderRasterLayer = () => {
 switch (productType) {
   case 'RECORD_3D': {
     render3DTileset()
-            .then(setCameraToProperHeightAndPos)
+            // .then(setCameraToProperHeightAndPos)
             .then(() => {
               appendIconByProductType('RECORD_3D');
             });
