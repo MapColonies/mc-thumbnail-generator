@@ -61,9 +61,14 @@ class PuppeteerOperations {
   ): Promise<fsSync.ReadStream | undefined> {
     this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
 
+    const viewPortSize = {
+      width: 800,
+      height: 800
+    }
+
     const browser = await Puppeteer.launch({
       executablePath: '/usr/bin/google-chrome',
-      args: ['--disable-web-security', '--single-process'],
+      args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`],
       userDataDir: './browser-cache',
     });
 
@@ -75,15 +80,7 @@ class PuppeteerOperations {
       const page = await browser.newPage();
       await page.goto(thumbnailPresentorUrl);
       const thumbnails: Screenshot[] = [];
-
-      const viewPortSize = {
-        width: 800,
-        height: 800
-      }
-
-      await page.setViewport(viewPortSize);
-      await page.reload();
-      await page.waitForSelector(this.targetIconId, { timeout: 60000 });
+      await page.waitForSelector(this.targetIconId, { timeout: 90000 });
       const cesiumElem = await page.$(this.cesiumContainerId);
       const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
 
