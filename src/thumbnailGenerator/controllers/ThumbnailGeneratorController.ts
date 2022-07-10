@@ -36,7 +36,7 @@ export default class ThumbnailGeneratorController {
       if (zipStream instanceof fsSync.ReadStream) {
         this.logger.info(`[ThumbnailGeneratorController][getLayerScreenShots] Finalizing, streaming zip file.`);
 
-        res.set('Content-disposition', `attachment; filename="${this.zipName}"`);
+        res.set('Content-disposition', `attachment; filename="${productId}_${this.zipName}"`);
         res.set('Content-Type', 'application/zip');
 
         zipStream.pipe(res);

@@ -1,55 +1,56 @@
 {
-  "openapiConfig": {
-    "filePath": "OPENAPI_FILE_PATH"
-  },
-  "telemetry": {
-    "serviceName": "TELEMETRY_SERVICE_NAME",
-    "hostname": "TELEMETRY_HOST_NAME",
-    "version": "TELEMETRY_SERVICE_VERSION",
-    "logger": {
-      "level": "LOG_LEVEL",
-      "prettyPrint": {
-        "__name": "LOG_PRETTY_PRINT_ENABLED",
-        "__format": "boolean"
-      }
+    "openapiConfig": {
+        "filePath": "OPENAPI_FILE_PATH"
     },
-    "tracing": {
-      "enabled": "TELEMETRY_TRACING_ENABLED",
-      "url": "TELEMETRY_TRACING_URL"
-    },
-    "metrics": {
-      "enabled": "TELEMETRY_METRICS_ENABLED",
-      "url": "TELEMETRY_METRICS_URL",
-      "interval": "TELEMETRY_METRICS_INTERVAL"
-    }
-  },
-  "server": {
-    "port": "SERVER_PORT",
-    "request": {
-      "payload": {
-        "limit": "REQUEST_PAYLOAD_LIMIT"
-      }
-    },
-    "response": {
-      "compression": {
-        "enabled": {
-          "__name": "RESPONSE_COMPRESSION_ENABLED",
-          "__format": "boolean"
+    "telemetry": {
+        "serviceName": "TELEMETRY_SERVICE_NAME",
+        "hostname": "TELEMETRY_HOST_NAME",
+        "version": "TELEMETRY_SERVICE_VERSION",
+        "logger": {
+            "level": "LOG_LEVEL",
+            "prettyPrint": {
+                "__name": "LOG_PRETTY_PRINT_ENABLED",
+                "__format": "boolean"
+            }
+        },
+        "tracing": {
+            "enabled": "TELEMETRY_TRACING_ENABLED",
+            "url": "TELEMETRY_TRACING_URL"
+        },
+        "metrics": {
+            "enabled": "TELEMETRY_METRICS_ENABLED",
+            "url": "TELEMETRY_METRICS_URL",
+            "interval": "TELEMETRY_METRICS_INTERVAL"
         }
-      }
+    },
+    "server": {
+        "port": "SERVER_PORT",
+        "request": {
+            "payload": {
+                "limit": "REQUEST_PAYLOAD_LIMIT"
+            }
+        },
+        "response": {
+            "compression": {
+                "enabled": {
+                    "__name": "RESPONSE_COMPRESSION_ENABLED",
+                    "__format": "boolean"
+                }
+            }
+        }
+    },
+    "thumbnailGenerator": {
+        "zipName": "THUMBNAIL_GENERATOR_ZIP_NAME",
+        "tempLocation": "THUMBNAIL_GENERATOR_TEMP_LOCATION",
+        "tempScreenshotLocation": "THUMBNAIL_GENERATOR_TEMP_SCREENSHOT_LOCATION",
+        "thumbnailPresentorUrl": "THUMBNAIL_GENERATOR_THUMBNAIL_PRESENTOR_URL",
+        "targetIconId": "THUMBNAIL_GENERATOR_TARGET_ICON_ID",
+        "cesiumContainerId": "THUMBNAIL_GENERATOR_CESIUM_CONTAINER_ID",
+        "bffUrl": "SERVICE_URL",
+        "token": "ACCESS_TOKEN_TOKEN_VALUE",
+        "tokenInjectionType": "ACCESS_TOKEN_INJECTION_TYPE",
+        "tokenAttributeName": "ACCESS_TOKEN_ATTRIBUTE_NAME",
+        "defaultAOIBBoxPoints": "DEFAULT_AOI_BBOX_POINTS",
+        "watermarkTimeout": "WATERMARK_TIMEOUT"
     }
-  },
-  "thumbnailGenerator": {
-    "zipName": "THUMBNAIL_GENERATOR_ZIP_NAME",
-    "tempLocation": "THUMBNAIL_GENERATOR_TEMP_LOCATION",
-    "tempScreenshotLocation": "THUMBNAIL_GENERATOR_TEMP_SCREENSHOT_LOCATION",
-    "thumbnailPresentorUrl": "THUMBNAIL_GENERATOR_THUMBNAIL_PRESENTOR_URL",
-    "targetIconId": "THUMBNAIL_GENERATOR_TARGET_ICON_ID",
-    "cesiumContainerId": "THUMBNAIL_GENERATOR_CESIUM_CONTAINER_ID",
-    "bffUrl": "SERVICE_URL",
-    "token": "ACCESS_TOKEN_TOKEN_VALUE",
-    "tokenInjectionType": "ACCESS_TOKEN_INJECTION_TYPE",
-    "tokenAttributeName": "ACCESS_TOKEN_ATTRIBUTE_NAME",
-    "defaultAOIBBoxPoints": "DEFAULT_AOI_BBOX_POINTS"
-  }
 }

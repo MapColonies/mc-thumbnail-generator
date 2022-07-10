@@ -1,4 +1,5 @@
 import config from 'config';
+import Puppeteer from 'puppeteer';
 import { logMethod } from '@map-colonies/telemetry';
 import { trace } from '@opentelemetry/api';
 import { DependencyContainer } from 'tsyringe/dist/typings/types';
@@ -16,7 +17,9 @@ export interface RegisterOptions {
   useChild?: boolean;
 }
 
-export const registerExternalValues = (options?: RegisterOptions): DependencyContainer => {
+export const BROWSER_CLIENT_TOKEN = Symbol('BROWSER_CLIENT');
+
+export const registerExternalValues = async (options?: RegisterOptions): Promise<DependencyContainer> => {
   const loggerConfig = config.get<LoggerOptions>('telemetry.logger');
   // @ts-expect-error the signature is wrong
   const logger = jsLogger({ ...loggerConfig, prettyPrint: loggerConfig.prettyPrint, hooks: { logMethod } });
@@ -29,6 +32,18 @@ export const registerExternalValues = (options?: RegisterOptions): DependencyCon
 
   const puppeteerOps = new PuppeteerOperations(logger, config);
   const searchLayerOps = new SearchLayersOperations(logger, config);
+  
+  const viewPortSize = {
+    width: 800,
+    height: 800
+  }
+
+  const browserClient = await Puppeteer.launch({
+    executablePath: '/usr/bin/google-chrome',
+    args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`],
+    userDataDir: './browser-cache',
+  });
+
 
   const dependencies: InjectionObject<unknown>[] = [
     { token: SERVICES.CONFIG, provider: { useValue: config } },
@@ -37,6 +52,7 @@ export const registerExternalValues = (options?: RegisterOptions): DependencyCon
     { token: SERVICES.METER, provider: { useValue: meter } },
     { token: SERVICES.PUPPETEER_OPERATIONS, provider: { useValue: puppeteerOps } },
     { token: SERVICES.SEARCH_LAYER_OPERATIONS, provider: { useValue: searchLayerOps } },
+    { token: BROWSER_CLIENT_TOKEN, provider: { useValue: browserClient } },
     { token: GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL, provider: { useFactory: getThumbnailGeneratorRouterFactory } },
     {
       token: 'onSignal',

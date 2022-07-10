@@ -4,9 +4,11 @@ import archiver from 'archiver';
 import { Logger } from '@map-colonies/js-logger';
 import Puppeteer from 'puppeteer';
 import Sharp from 'sharp';
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable, container } from 'tsyringe';
 import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
+import { BROWSER_CLIENT_TOKEN } from '../../containerConfig';
+
 
 enum ThumbnailSizes {
   SMALL = 'sm',
@@ -27,6 +29,7 @@ class PuppeteerOperations {
   private readonly cesiumContainerId: string;
   private readonly thumbnailSizes: Record<ThumbnailSizes, Puppeteer.Viewport>;
   private readonly tempScreenshotLocation: string;
+  private readonly watermarkTimeout: string;
 
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
     
@@ -51,6 +54,7 @@ class PuppeteerOperations {
     this.targetIconId = this.config.get('thumbnailGenerator.targetIconId');
     this.cesiumContainerId = this.config.get('thumbnailGenerator.cesiumContainerId');
     this.tempScreenshotLocation = this.config.get('thumbnailGenerator.tempScreenshotLocation');
+    this.watermarkTimeout = this.config.get('thumbnailGenerator.watermarkTimeout');
   }
 
   public async getLayerScreenshots(
@@ -60,27 +64,18 @@ class PuppeteerOperations {
     productId: string
   ): Promise<fsSync.ReadStream | undefined> {
     this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
-
-    const viewPortSize = {
-      width: 800,
-      height: 800
-    }
-
-    const browser = await Puppeteer.launch({
-      executablePath: '/usr/bin/google-chrome',
-      args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`],
-      userDataDir: './browser-cache',
-    });
-
+    
+    const browser = container.resolve<Puppeteer.Browser>(BROWSER_CLIENT_TOKEN);
+    const page = await browser.newPage();
+    
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
-
+      
       const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
       await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
-      const page = await browser.newPage();
       await page.goto(thumbnailPresentorUrl);
       const thumbnails: Screenshot[] = [];
-      await page.waitForSelector(this.targetIconId, { timeout: 90000 });
+      await page.waitForSelector(this.targetIconId, { timeout: Number(this.watermarkTimeout) });
       const cesiumElem = await page.$(this.cesiumContainerId);
       const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
 
@@ -90,7 +85,7 @@ class PuppeteerOperations {
         thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
       }
 
-      await browser.close();
+      await page.close();
 
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
       const zipReadStream = await this.createZipStream(thumbnails);
@@ -98,7 +93,7 @@ class PuppeteerOperations {
       return zipReadStream;
     } catch (e) {
       this.logger.error(`[PuppeteerOperations][getLayerScreenshots] There was an error creating the thumbnails. Error: ${e as string}`);
-      await browser.close();
+      await page.close();
       throw new Error('There was an error creating the thumbnails.');
     }
   }
