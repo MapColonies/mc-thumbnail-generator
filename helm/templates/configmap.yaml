@@ -25,5 +25,6 @@ data:
   ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.global.clientApp.accessTokenAttributeName }}
   ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.global.clientApp.accessTokenInjectionType }}
   ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.global.clientApp.accessTokenTokenValue }}
+  WATERMARK_TIMEOUT: {{ quote .Values.watermarkTimeout}}
   CESIUM_CLIENT_WEB_CONFIG: {{ (tpl (.Files.Get "config/cesiumClientWebConfig.json") . ) | toJson}}
 {{- end }}
