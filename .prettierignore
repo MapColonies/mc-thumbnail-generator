@@ -13,3 +13,5 @@ node_modules
 coverage
 helm
 reports
+src/common/temp
+src/cesiumClientWeb/scripts

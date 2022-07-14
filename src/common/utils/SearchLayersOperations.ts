@@ -8,13 +8,12 @@ import { IConfig } from '../interfaces';
 import { ProductType } from '../../thumbnailGenerator/models/ProductType';
 import { Protocols } from '../../thumbnailGenerator/models/Protocols';
 
-
 @injectable()
 class SearchLayersOperations {
   private readonly bffUrl: string;
 
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
-    this.bffUrl = this.config.get("thumbnailGenerator.bffUrl");
+    this.bffUrl = this.config.get('thumbnailGenerator.bffUrl');
   }
 
   public async getLayersForRecord(productType: ProductType): Promise<Record<string, unknown>> {
@@ -52,7 +51,7 @@ class SearchLayersOperations {
       const relevantLayerMetadata = (get(searchRecordsRes, 'data.search') as Record<string, unknown>[]).find(
         (record) => record.productId === productId
       );
-      
+
       const bbox = BBox(get(relevantLayerMetadata, 'footprint'));
 
       if (productType !== ProductType.RECORD_3D) {
@@ -75,10 +74,9 @@ class SearchLayersOperations {
           },
         });
 
-        const layerCapability = bffGetCapabilities.data as Record<string, unknown>;        
+        const layerCapability = bffGetCapabilities.data as Record<string, unknown>;
         const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
         const url = (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
-        // @ts-ignore
 
         return { url, bbox };
       }
@@ -87,7 +85,6 @@ class SearchLayersOperations {
       )?.url as string;
 
       return { url, bbox };
-      
     } catch (e) {
       this.logger.error(`[SearchLayersOperations][getLayerUrl] There was an error targeting the requested product '${productId}'.`);
       throw new Error(`There was an error targeting the requested product '${productId}'.`);

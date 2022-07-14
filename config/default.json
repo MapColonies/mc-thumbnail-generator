@@ -33,11 +33,10 @@
         "targetIconId": "#layerIcon",
         "cesiumContainerId": "#cesiumContainer",
         "watermarkTimeout": "90000",
-        "bffUrl": "http://discrete-layer-client-int-bff-route-libot-integration.apps.v0h0bdx6.eastus.aroapp.io/graphql/graphql",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicmVzb3VyY2VUeXBlcyI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJkIjpbInJhc3RlciIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTUxNjIzOTAyMn0.eGlm2er5oJUCOqNWA8bgi1QXoTSvtXD8lvRxcnN0BKY",
+        "bffUrl": "",
+        "token": "",
         "tokenInjectionType": "queryParam",
         "tokenAttributeName": "token",
         "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
-
     }
 }
