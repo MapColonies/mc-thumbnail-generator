@@ -1,43 +1,42 @@
 {
-    "openapiConfig": {
-        "filePath": "./openapi3.yaml",
-        "basePath": "/docs",
-        "rawPath": "/api",
-        "uiPath": "/api"
-    },
-    "telemetry": {
-        "logger": {
-            "level": "info",
-            "prettyPrint": false
-        }
-    },
-    "server": {
-        "port": "3000",
-        "request": {
-            "payload": {
-                "limit": "1mb"
-            }
-        },
-        "response": {
-            "compression": {
-                "enabled": true,
-                "options": null
-            }
-        }
-    },
-    "thumbnailGenerator": {
-        "zipName": "Thumbnails.zip",
-        "tempLocation": "src/common/temp",
-        "tempScreenshotLocation": "src/common/temp/screenshots",
-        "thumbnailPresentorUrl": "http://localhost:4000",
-        "targetIconId": "#layerIcon",
-        "cesiumContainerId": "#cesiumContainer",
-        "watermarkTimeout": "90000",
-        "bffUrl": "http://discrete-layer-client-int-bff-route-libot-integration.apps.v0h0bdx6.eastus.aroapp.io/graphql/graphql",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicmVzb3VyY2VUeXBlcyI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJkIjpbInJhc3RlciIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTUxNjIzOTAyMn0.eGlm2er5oJUCOqNWA8bgi1QXoTSvtXD8lvRxcnN0BKY",
-        "tokenInjectionType": "queryParam",
-        "tokenAttributeName": "token",
-        "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
-
+  "openapiConfig": {
+    "filePath": "./openapi3.yaml",
+    "basePath": "/docs",
+    "rawPath": "/api",
+    "uiPath": "/api"
+  },
+  "telemetry": {
+    "logger": {
+      "level": "info",
+      "prettyPrint": false
     }
+  },
+  "server": {
+    "port": "3000",
+    "request": {
+      "payload": {
+        "limit": "1mb"
+      }
+    },
+    "response": {
+      "compression": {
+        "enabled": true,
+        "options": null
+      }
+    }
+  },
+  "thumbnailGenerator": {
+    "zipName": "Thumbnails.zip",
+    "tempLocation": "src/common/temp",
+    "tempScreenshotLocation": "src/common/temp/screenshots",
+    "thumbnailPresentorUrl": "http://localhost:4000",
+    "targetIconId": "#layerIcon",
+    "cesiumContainerId": "#cesiumContainer",
+    "watermarkTimeout": "90000",
+    "bffUrl": "http://discrete-layer-client-int-bff-route-libot-integration.apps.v0h0bdx6.eastus.aroapp.io/graphql/graphql",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicmVzb3VyY2VUeXBlcyI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJkIjpbInJhc3RlciIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTUxNjIzOTAyMn0.eGlm2er5oJUCOqNWA8bgi1QXoTSvtXD8lvRxcnN0BKY",
+    "tokenInjectionType": "queryParam",
+    "tokenAttributeName": "token",
+    "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
+  }
 }

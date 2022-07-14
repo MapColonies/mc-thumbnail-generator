@@ -1,5 +1,3 @@
-import { Readable } from 'stream';
-import fs from 'fs/promises';
 import fsSync from 'fs';
 import httpStatusCodes from 'http-status-codes';
 import { Logger } from '@map-colonies/js-logger';
@@ -13,18 +11,17 @@ import { ProductType } from '../models/ProductType';
 
 type GetLayerScreenshots = RequestHandler<undefined>;
 
-
 @injectable()
 export default class ThumbnailGeneratorController {
   private readonly zipName: string;
-  
+
   public constructor(
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
     @inject(SERVICES.PUPPETEER_OPERATIONS) private readonly puppeteerOps: PuppeteerOperations,
     @inject(SERVICES.SEARCH_LAYER_OPERATIONS) private readonly searchLayerOps: SearchLayersOperations,
     @inject(SERVICES.CONFIG) private readonly config: IConfig
   ) {
-    this.zipName = this.config.get<string>("thumbnailGenerator.zipName");
+    this.zipName = this.config.get<string>('thumbnailGenerator.zipName');
   }
 
   public getLayerScreenShots: GetLayerScreenshots = async (req, res, next) => {

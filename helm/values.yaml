@@ -11,7 +11,7 @@ global:
   clientApp:
     accessTokenAttributeName: 'token'
     accessTokenInjectionType: 'queryParam'
-    accessTokenTokenValue: ''
+    accessTokenTokenValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZCI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJpYXQiOjE1MTYyMzkwMjJ9.EnuWfcbCXkI8EEqdjcBb9SRSintpBZ6chLb6Odk_FzY'
 
 
 enabled: true
@@ -61,7 +61,7 @@ resources:
       memory: 128Mi
 
 route:
-  enabled: true
+  enabled: false
   path: /
   timeout:
     enabled: false # defaults to 30s by openshift
@@ -76,6 +76,6 @@ ingress:
     origin: '*'
 
 defaultAOIBBoxPoints: "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
-serviceUrl: 'http://bff.url'
+serviceUrl: 'http://discrete-layer-client-int-bff-route-libot-integration.apps.v0h0bdx6.eastus.aroapp.io/graphql/graphql'
 zipName: 'Thumbnails.zip'
 watermarkTimeout: '90000'

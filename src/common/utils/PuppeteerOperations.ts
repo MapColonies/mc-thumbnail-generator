@@ -9,7 +9,6 @@ import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
 import { BROWSER_CLIENT_TOKEN } from '../../containerConfig';
 
-
 enum ThumbnailSizes {
   SMALL = 'sm',
   MEDIUM = 'md',
@@ -32,7 +31,6 @@ class PuppeteerOperations {
   private readonly watermarkTimeout: string;
 
   public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, @inject(SERVICES.CONFIG) private readonly config: IConfig) {
-    
     this.thumbnailSizes = {
       [ThumbnailSizes.SMALL]: {
         width: 128,
@@ -64,13 +62,13 @@ class PuppeteerOperations {
     productId: string
   ): Promise<fsSync.ReadStream | undefined> {
     this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
-    
+
     const browser = container.resolve<Puppeteer.Browser>(BROWSER_CLIENT_TOKEN);
     const page = await browser.newPage();
-    
+
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
-      
+
       const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
       await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
       await page.goto(thumbnailPresentorUrl);
@@ -80,7 +78,9 @@ class PuppeteerOperations {
       const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
 
       for (const [sizeName, thumbnailSize] of Object.entries(this.thumbnailSizes)) {
-        const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer).resize({...thumbnailSize}).toBuffer();
+        const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer)
+          .resize({ ...thumbnailSize })
+          .toBuffer();
 
         thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
       }
