@@ -37,7 +37,8 @@
         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicmVzb3VyY2VUeXBlcyI6WyJyYXN0ZXIiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdLCJkIjpbInJhc3RlciIsImRlbSIsInZlY3RvciIsIjNkIl0sImlhdCI6MTUxNjIzOTAyMn0.eGlm2er5oJUCOqNWA8bgi1QXoTSvtXD8lvRxcnN0BKY",
         "tokenInjectionType": "queryParam",
         "tokenAttributeName": "token",
-        "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
+        "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]",
+        "loadingTilesTimeout": "20000"
 
     }
 }

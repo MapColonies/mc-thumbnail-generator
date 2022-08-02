@@ -27,4 +27,5 @@ data:
   ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.global.clientApp.accessTokenTokenValue }}
   WATERMARK_TIMEOUT: {{ quote .Values.watermarkTimeout}}
   CESIUM_CLIENT_WEB_CONFIG: {{ (tpl (.Files.Get "config/cesiumClientWebConfig.json") . ) | toJson}}
+  LOADING_TILES_TIMEOUT: {{ quote .Values.loadingTilesTimeout }}
 {{- end }}

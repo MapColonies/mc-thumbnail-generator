@@ -2,4 +2,5 @@
     "token": {{ quote .Values.global.clientApp.accessTokenTokenValue }},
     "injectionType": {{ quote .Values.global.clientApp.accessTokenInjectionType }},
     "defaultAOIBBoxPoints": {{ quote .Values.defaultAOIBBoxPoints }}
+    "loadingTilesTimeout": {{ quote .Values.loadingTilesTimeout }}
 }

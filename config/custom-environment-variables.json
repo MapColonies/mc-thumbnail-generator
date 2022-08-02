@@ -51,6 +51,7 @@
         "tokenInjectionType": "ACCESS_TOKEN_INJECTION_TYPE",
         "tokenAttributeName": "ACCESS_TOKEN_ATTRIBUTE_NAME",
         "defaultAOIBBoxPoints": "DEFAULT_AOI_BBOX_POINTS",
-        "watermarkTimeout": "WATERMARK_TIMEOUT"
+        "watermarkTimeout": "WATERMARK_TIMEOUT",
+        "loadingTilesTimeout": "LOADING_TILES_TIMEOUT"
     }
 }
