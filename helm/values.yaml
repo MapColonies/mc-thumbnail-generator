@@ -69,6 +69,7 @@ route:
 
 ingress:
   enabled: false
+  type: 'nginx-kubernetes' # supported values: 'nginx-org' | 'nginx-kubernetes'
   path: /
   host: 'localhost'
   cors:
