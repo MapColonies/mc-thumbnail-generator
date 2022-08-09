@@ -22,20 +22,19 @@ const getAuthObject = () => {
   const tokenProps = {};
   if (INJECTION_TYPE.toLowerCase() === 'header') {
     tokenProps.headers = {
-      'X-API-KEY': TOKEN
+      'X-API-KEY': TOKEN,
     };
   } else if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
     tokenProps.queryParameters = {
-      'token': TOKEN
+      token: TOKEN,
     };
   }
   return tokenProps;
-
-}
+};
 
 // Setup Cesium viewer first.
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  baseLayerPicker: false
+  baseLayerPicker: false,
 });
 
 const ellipsoid = viewer.scene.mapProjection.ellipsoid;
@@ -63,9 +62,10 @@ const tilesLoadedPromise = () => {
 
 const tilesetLoadedPromise = (tileset) => {
   return new Promise((resolve)=>{
-    setTimeout(()=>resolve(true), LOADING_TILES_TIMEOUT);
+    const loadingTilesTimeout = setTimeout(()=>resolve(true), LOADING_TILES_TIMEOUT);
     tileset.allTilesLoaded.addEventListener(()=> {
       // console.log('_selectedTiles tilesetLoadedPromise--->', tileset.root.content.tile.content.tileset._selectedTiles); 
+      clearTimeout(loadingTilesTimeout);
       resolve(true);
     });
   })
@@ -73,13 +73,13 @@ const tilesetLoadedPromise = (tileset) => {
 
 function getParameterByName(name) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop)
+    get: (searchParams, prop) => searchParams.get(prop),
   });
 
   return params[name];
-};
+}
 
-const appendIconByProductType = productType => {
+const appendIconByProductType = (productType) => {
   let iconClassName;
 
   switch (productType) {
@@ -136,7 +136,7 @@ const setCameraToProperHeightAndPos = (tryNum = 0) => {
   return Promise.resolve(true);
 };
 
-const getLayerBBoxArea = bbox => {
+const getLayerBBoxArea = (bbox) => {
   const bboxPolygon = turf.bboxPolygon(bbox);
   return turf.area(bboxPolygon);
 };
@@ -166,7 +166,7 @@ const getAOIBBoxArea = () => {
   return turf.area(AOIBBox);
 };
 
-const getSuitableBBox = layerBBox => {
+const getSuitableBBox = (layerBBox) => {
   const layerBBoxArea = getLayerBBoxArea(layerBBox);
   const AOIBBoxArea = getAOIBBoxArea();
 
@@ -250,25 +250,25 @@ const renderRasterLayer = () => {
   const provider = new Cesium.WebMapTileServiceImageryProvider({
     url: new Cesium.Resource({
       url,
-      ...getAuthObject()
+      ...getAuthObject(),
     }),
     rectangle: rectWithBuffers,
-    tilingScheme: new Cesium.GeographicTilingScheme()
-        // style: 'default',
-        // format: 'image/jpeg',
-        // tileMatrixSetID:'libotGrid'
+    tilingScheme: new Cesium.GeographicTilingScheme(),
+    // style: 'default',
+    // format: 'image/jpeg',
+    // tileMatrixSetID:'libotGrid'
   });
 
   viewer.imageryLayers.addImageryProvider(provider);
   const rectangle = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     viewer.camera.flyTo({
-      destination: rectangle, 
+      destination: rectangle,
       duration: 0,
-      complete: resolve
+      complete: resolve,
     });
-  })
+  });
 };
 
 // Render products
@@ -284,8 +284,8 @@ switch (productType) {
   }
   case 'RECORD_RASTER': {
     renderRasterLayer()
-            .then(tilesLoadedPromise)
-            .then(() => appendIconByProductType('RECORD_RASTER'));
+      .then(tilesLoadedPromise)
+      .then(() => appendIconByProductType('RECORD_RASTER'));
 
     break;
   }
