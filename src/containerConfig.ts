@@ -9,7 +9,7 @@ import { SERVICES, SERVICE_NAME } from './common/constants';
 import { tracing } from './common/tracing';
 import { InjectionObject, registerDependencies } from './common/dependencyRegistration';
 import PuppeteerOperations from './common/utils/PuppeteerOperations';
-import { GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL, getThumbnailGeneratorRouterFactory} from './thumbnailGenerator/routes/getThumbnailGeneratorRouter';
+import { GET_THUMBNAIL_GENERATOR_ROUTER_SYMBOL, getThumbnailGeneratorRouterFactory } from './thumbnailGenerator/routes/getThumbnailGeneratorRouter';
 import SearchLayersOperations from './common/utils/SearchLayersOperations';
 
 export interface RegisterOptions {
@@ -32,18 +32,17 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
 
   const puppeteerOps = new PuppeteerOperations(logger, config);
   const searchLayerOps = new SearchLayersOperations(logger, config);
-  
+
   const viewPortSize = {
     width: 800,
-    height: 800
-  }
+    height: 800,
+  };
 
   const browserClient = await Puppeteer.launch({
     executablePath: '/usr/bin/google-chrome',
     args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`],
     userDataDir: './browser-cache',
   });
-
 
   const dependencies: InjectionObject<unknown>[] = [
     { token: SERVICES.CONFIG, provider: { useValue: config } },

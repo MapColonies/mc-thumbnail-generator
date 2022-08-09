@@ -5,9 +5,7 @@ const PRODUCT_TYPE_PARAM = 'productType';
 const BBOX_PARAM = 'bbox';
 const MAX_APPROPRIATE_ZOOM_KM = 1;
 const CONSIDERED_BIG_MODEL = 3;
-const DEFAULT_AOI_BBOX_POINTS = JSON.parse(
-    config.defaultAOIBBoxPoints
-);
+const DEFAULT_AOI_BBOX_POINTS = JSON.parse(config.defaultAOIBBoxPoints);
 const MIN_AOI_TO_BBOX_RATIO = 0.2;
 const INJECTION_TYPE = config.injectionType;
 
@@ -15,20 +13,19 @@ const getAuthObject = () => {
   const tokenProps = {};
   if (INJECTION_TYPE.toLowerCase() === 'header') {
     tokenProps.headers = {
-      'X-API-KEY': TOKEN
+      'X-API-KEY': TOKEN,
     };
   } else if (INJECTION_TYPE.toLowerCase() === 'queryparam') {
     tokenProps.queryParameters = {
-      'token': TOKEN
+      token: TOKEN,
     };
   }
   return tokenProps;
-
-}
+};
 
 // Setup Cesium viewer first.
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  baseLayerPicker: false
+  baseLayerPicker: false,
 });
 
 const ellipsoid = viewer.scene.mapProjection.ellipsoid;
@@ -55,20 +52,20 @@ const tilesLoadedPromise = () => {
 };
 
 const tilesetLoadedPromise = (tileset) => {
-  return new Promise((resolve)=>{
+  return new Promise((resolve) => {
     tileset.allTilesLoaded.addEventListener(resolve);
-  })
+  });
 };
 
 function getParameterByName(name) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop)
+    get: (searchParams, prop) => searchParams.get(prop),
   });
 
   return params[name];
-};
+}
 
-const appendIconByProductType = productType => {
+const appendIconByProductType = (productType) => {
   let iconClassName;
 
   switch (productType) {
@@ -128,14 +125,14 @@ const getCameraHeight = () => {
 
 //   return new Promise(resolve => {
 //     viewer.camera.flyTo({
-//       destination: rectWithBuffers, 
+//       destination: rectWithBuffers,
 //       duration: 0,
 //       complete: resolve
 //     });
 //   })
 // };
 
-const getLayerBBoxArea = bbox => {
+const getLayerBBoxArea = (bbox) => {
   const bboxPolygon = turf.bboxPolygon(bbox);
   return turf.area(bboxPolygon);
 };
@@ -165,7 +162,7 @@ const getAOIBBoxArea = () => {
   return turf.area(AOIBBox);
 };
 
-const getSuitableBBox = layerBBox => {
+const getSuitableBBox = (layerBBox) => {
   const layerBBoxArea = getLayerBBoxArea(layerBBox);
   const AOIBBoxArea = getAOIBBoxArea();
 
@@ -193,23 +190,23 @@ const bbox = getParameterByName(BBOX_PARAM);
 
 const render3DTileset = async () => {
   const tileset = viewer.scene.primitives.add(
-        new Cesium.Cesium3DTileset({
-          url: new Cesium.Resource({
-            url,
-            ...getAuthObject()
-          })
-        })
-    );
+    new Cesium.Cesium3DTileset({
+      url: new Cesium.Resource({
+        url,
+        ...getAuthObject(),
+      }),
+    })
+  );
 
   const rectWithBuffers = Cesium.Rectangle.fromDegrees(...JSON.parse(bbox));
 
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     viewer.camera.flyTo({
-      destination: rectWithBuffers, 
+      destination: rectWithBuffers,
       duration: 0,
-      complete: resolve
+      complete: resolve,
     });
-  })
+  });
 
   return tilesetLoadedPromise(tileset);
 };
@@ -224,25 +221,25 @@ const renderRasterLayer = () => {
   const provider = new Cesium.WebMapTileServiceImageryProvider({
     url: new Cesium.Resource({
       url,
-      ...getAuthObject()
+      ...getAuthObject(),
     }),
     rectangle: rectWithBuffers,
-    tilingScheme: new Cesium.GeographicTilingScheme()
-        // style: 'default',
-        // format: 'image/jpeg',
-        // tileMatrixSetID:'libotGrid'
+    tilingScheme: new Cesium.GeographicTilingScheme(),
+    // style: 'default',
+    // format: 'image/jpeg',
+    // tileMatrixSetID:'libotGrid'
   });
 
   viewer.imageryLayers.addImageryProvider(provider);
   const rectangle = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     viewer.camera.flyTo({
-      destination: rectangle, 
+      destination: rectangle,
       duration: 0,
-      complete: resolve
+      complete: resolve,
     });
-  })
+  });
 };
 
 // Render products
@@ -250,17 +247,17 @@ const renderRasterLayer = () => {
 switch (productType) {
   case 'RECORD_3D': {
     render3DTileset()
-            // .then(setCameraToProperHeightAndPos)
-            .then(() => {
-              appendIconByProductType('RECORD_3D');
-            });
+      // .then(setCameraToProperHeightAndPos)
+      .then(() => {
+        appendIconByProductType('RECORD_3D');
+      });
 
     break;
   }
   case 'RECORD_RASTER': {
     renderRasterLayer()
-            .then(tilesLoadedPromise)
-            .then(() => appendIconByProductType('RECORD_RASTER'));
+      .then(tilesLoadedPromise)
+      .then(() => appendIconByProductType('RECORD_RASTER'));
 
     break;
   }
