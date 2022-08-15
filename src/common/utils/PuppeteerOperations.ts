@@ -61,7 +61,6 @@ class PuppeteerOperations {
     productType: string,
     productId: string
   ): Promise<fsSync.ReadStream | undefined> {
-    this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
 
     const browser = container.resolve<Puppeteer.Browser>(BROWSER_CLIENT_TOKEN);
     const page = await browser.newPage();
@@ -70,6 +69,7 @@ class PuppeteerOperations {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
 
       const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
+      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Requesting presentor url => ${thumbnailPresentorUrl}`);
       await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
       await page.goto(thumbnailPresentorUrl);
       const thumbnails: Screenshot[] = [];

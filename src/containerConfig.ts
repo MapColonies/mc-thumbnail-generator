@@ -38,6 +38,8 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
     height: 800,
   };
 
+  logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
+
   const browserClient = await Puppeteer.launch({
     executablePath: '/usr/bin/google-chrome',
     args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`],

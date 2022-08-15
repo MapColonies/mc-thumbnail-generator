@@ -98,7 +98,7 @@ const appendIconByProductType = (productType) => {
   iconSpan.classList.add(iconClassName);
   iconSpan.id = 'layerIcon';
 
-  document.querySelector('body').appendChild(iconSpan);
+  document.querySelector('#cesiumContainer').appendChild(iconSpan);
 };
 
 const getExtentRect = () => {
