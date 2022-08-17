@@ -55,8 +55,8 @@ class SearchLayersOperations {
       const bbox = BBox(get(relevantLayerMetadata, 'footprint'));
 
       if (productType !== ProductType.RECORD_3D) {
-        const linkWMTS = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find(
-          (link) => link.protocol === Protocols.RASTER_LAYER_PROTOCOL
+        const layerLink = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find(
+          (link) => [Protocols.RASTER_LAYER_PROTOCOL, Protocols.RASTER_XYZ_LAYER_PROTOCOL].includes(link.protocol as Protocols)
         );
 
         const bffGetCapabilities = await axios.post(this.bffUrl, {
@@ -67,7 +67,7 @@ class SearchLayersOperations {
               data: [
                 {
                   recordType: productType,
-                  idList: [get(linkWMTS, 'name') as string],
+                  idList: [get(layerLink, 'name') as string],
                 },
               ],
             },
@@ -76,7 +76,7 @@ class SearchLayersOperations {
 
         const layerCapability = bffGetCapabilities.data as Record<string, unknown>;
         const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
-        const url = (get(linkWMTS, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
+        const url = (get(layerLink, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
 
         return { url, bbox };
       }
