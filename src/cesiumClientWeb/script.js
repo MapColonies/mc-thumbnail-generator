@@ -247,7 +247,7 @@ const renderRasterLayer = () => {
   rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * 0.5;
   rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * 0.5;
 
-  const provider = new Cesium.WebMapTileServiceImageryProvider({
+  const provider = new Cesium.UrlTemplateImageryProvider({
     url: new Cesium.Resource({
       url,
       ...getAuthObject(),
