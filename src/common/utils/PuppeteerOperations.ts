@@ -61,7 +61,7 @@ class PuppeteerOperations {
     productType: string,
     productId: string
   ): Promise<fsSync.ReadStream | undefined> {
-
+    const ELEMENT_PADDING = 1.2;
     const browser = container.resolve<Puppeteer.Browser>(BROWSER_CLIENT_TOKEN);
     const page = await browser.newPage();
 
@@ -75,22 +75,34 @@ class PuppeteerOperations {
       const thumbnails: Screenshot[] = [];
       await page.waitForSelector(this.targetIconId, { timeout: Number(this.watermarkTimeout) });
       const cesiumElem = await page.$(this.cesiumContainerId);
-      const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
+      const cesiumElementBBox = await cesiumElem?.boundingBox();
 
-      for (const [sizeName, thumbnailSize] of Object.entries(this.thumbnailSizes)) {
-        const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer)
-          .resize({ ...thumbnailSize })
-          .toBuffer();
+      if (cesiumElementBBox) {
+        const thumbnailBuffer = await cesiumElem?.screenshot({
+          type: 'png',
+          clip: {
+            ...cesiumElementBBox,
+            width: cesiumElementBBox.width * ELEMENT_PADDING,
+          },
+        });
 
-        thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
+        for (const [sizeName, thumbnailSize] of Object.entries(this.thumbnailSizes)) {
+          const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer)
+            .resize({ ...thumbnailSize })
+            .toBuffer();
+
+          thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
+        }
+
+        await page.close();
+
+        this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
+        const zipReadStream = await this.createZipStream(thumbnails);
+
+        return zipReadStream;
       }
 
-      await page.close();
-
-      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
-      const zipReadStream = await this.createZipStream(thumbnails);
-
-      return zipReadStream;
+      throw new Error(`Couldn't resolve cesium element.`);
     } catch (e) {
       this.logger.error(`[PuppeteerOperations][getLayerScreenshots] There was an error creating the thumbnails. Error: ${e as string}`);
       await page.close();
