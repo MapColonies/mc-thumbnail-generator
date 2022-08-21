@@ -27,8 +27,8 @@ export default class ThumbnailGeneratorController {
   public getLayerScreenShots: GetLayerScreenshots = async (req, res, next) => {
     try {
       const { productId, productType } = req.query as Record<string, string>;
-      const recordUrl = await this.searchLayerOps.getLayerUrl(productId, productType as ProductType);
-      const zipStream = await this.puppeteerOps.getLayerScreenshots(recordUrl.url, recordUrl.bbox, productType, productId);
+      const layerUrlWithMetadata = await this.searchLayerOps.getLayerUrlWithMetadata(productId, productType as ProductType);
+      const zipStream = await this.puppeteerOps.getLayerScreenshots(productType, productId, layerUrlWithMetadata);
 
       if (zipStream instanceof fsSync.ReadStream) {
         this.logger.info(`[ThumbnailGeneratorController][getLayerScreenShots] Finalizing, streaming zip file.`);

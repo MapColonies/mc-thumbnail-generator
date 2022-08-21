@@ -1,8 +1,15 @@
 const config = globalThis.CONFIG;
 const TOKEN = config.token;
-const URL_PARAM = 'url';
-const PRODUCT_TYPE_PARAM = 'productType';
-const BBOX_PARAM = 'bbox';
+const SEARCH_PARAMS = {
+  URL_PARAM: 'url',
+  PRODUCT_TYPE_PARAM: 'productType',
+  BBOX_PARAM: 'bbox',
+  RECORD_PROTOCOL: 'protocol'
+};
+const RECORD_PROTOCOLS = {
+  WMTS_LAYER: 'WMTS_LAYER',
+  XYZ_LAYER: 'XYZ_LAYER',
+};
 const DEFAULT_AOI_BBOX_POINTS = JSON.parse(
     config.defaultAOIBBoxPoints
 );
@@ -186,11 +193,51 @@ const getSuitableBBox = (layerBBox) => {
   return layerBBox;
 };
 
+// Debugging Helpers
+
+const drawLayerRectangle = (rectangle, color = false) => {
+    // Color argument should be of cesium colors e.g => Cesium.Color.YELLOW.withAlpha(0.5)
+    // default is red.
+
+    const rectPrimitive = viewer.scene.primitives.add(new Cesium.Primitive({
+    geometryInstances : new Cesium.GeometryInstance({
+        geometry : new Cesium.RectangleGeometry({
+            rectangle
+        })
+    }),
+    appearance : new Cesium.EllipsoidSurfaceAppearance({
+        aboveGround : false,
+        material: Cesium.Material.fromType('Color')
+    })
+  }));
+
+  if(color) {
+    rectPrimitive.appearance.material.uniforms.color = color;
+  }
+
+}
+
+const drawModelBoundingSphere = (boundingSphere, color = false) => {
+  // Color argument should be of cesium colors e.g => Cesium.Color.YELLOW.withAlpha(0.5)
+
+  viewer.entities.add({
+    name: 'Bounding Sphere',
+    position: boundingSphere.center,
+    ellipsoid: {
+      radii:  new Cesium.Cartesian3(boundingSphere.radius, boundingSphere.radius, boundingSphere.radius),
+      material: color || Cesium.Color.RED.withAlpha(0.5),
+      outline: true,
+      outlineColor: Cesium.Color.BLACK,
+    },
+  });
+}
+
 // --------
 
-const url = getParameterByName(URL_PARAM);
-const productType = getParameterByName(PRODUCT_TYPE_PARAM);
-const bbox = getParameterByName(BBOX_PARAM);
+const url = getParameterByName(SEARCH_PARAMS.URL_PARAM);
+const productType = getParameterByName(SEARCH_PARAMS.PRODUCT_TYPE_PARAM);
+const bbox = getParameterByName(SEARCH_PARAMS.BBOX_PARAM);
+const recordProtocol = getParameterByName(SEARCH_PARAMS.RECORD_PROTOCOL);
 
 const render3DTileset = async () => {
   let tryNum = 0;
@@ -234,6 +281,9 @@ const render3DTileset = async () => {
           resolve(true);
         }
       })
+    }).finally(() => {
+      // Drawing model's Bounding Sphere for debugging
+      // drawModelBoundingSphere(tileset.boundingSphere);
     });
   });
 
@@ -247,27 +297,47 @@ const renderRasterLayer = () => {
   rectWithBuffers.east = rectWithBuffers.east + rectWithBuffers.width * 0.5;
   rectWithBuffers.west = rectWithBuffers.west - rectWithBuffers.width * 0.5;
 
-  const provider = new Cesium.UrlTemplateImageryProvider({
-    url: new Cesium.Resource({
-      url,
-      ...getAuthObject(),
-    }),
-    rectangle: rectWithBuffers,
-    tilingScheme: new Cesium.GeographicTilingScheme(),
-    // style: 'default',
-    // format: 'image/jpeg',
-    // tileMatrixSetID:'libotGrid'
-  });
+  let provider = null;
 
-  viewer.imageryLayers.addImageryProvider(provider);
-  const rectangle = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
+  switch (recordProtocol) {
+    case RECORD_PROTOCOLS.WMTS_LAYER:
+      provider = new Cesium.WebMapTileServiceImageryProvider({
+        url: new Cesium.Resource({
+          url,
+          ...getAuthObject(),
+        }),
+        rectangle: rectWithBuffers,
+        tilingScheme: new Cesium.GeographicTilingScheme(),
+      });
+      break;
 
-  return new Promise((resolve) => {
-    viewer.camera.flyTo({
-      destination: rectangle,
-      duration: 0,
-      complete: resolve,
-    });
+    case RECORD_PROTOCOLS.XYZ_LAYER:
+      provider = new Cesium.UrlTemplateImageryProvider({
+        url: new Cesium.Resource({
+          url,
+          ...getAuthObject(),
+        }),
+        rectangle: rectWithBuffers,
+      });
+      break;
+  }
+
+  return new Promise((resolve, reject) => {
+    if (provider) {
+      viewer.imageryLayers.addImageryProvider(provider);
+      const rectangle = Cesium.Rectangle.fromDegrees(...getSuitableBBox(JSON.parse(bbox)));
+
+      // Drawing Layer's rectangle for debugging
+      // drawLayerRectangle(rectangle);
+
+      viewer.camera.flyTo({
+        destination: rectangle,
+        duration: 0,
+        complete: resolve,
+      });
+    } else {
+      reject('There was an error creating the provider.');
+    }
   });
 };
 
@@ -285,7 +355,8 @@ switch (productType) {
   case 'RECORD_RASTER': {
     renderRasterLayer()
       .then(tilesLoadedPromise)
-      .then(() => appendIconByProductType('RECORD_RASTER'));
+      .then(() => appendIconByProductType('RECORD_RASTER'))
+      .catch((e) => console.error(e));
 
     break;
   }

@@ -8,6 +8,7 @@ import { inject, injectable, container } from 'tsyringe';
 import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
 import { BROWSER_CLIENT_TOKEN } from '../../containerConfig';
+import { LayerUrlWithMetadata } from '../../thumbnailGenerator/interfaces';
 
 enum ThumbnailSizes {
   SMALL = 'sm',
@@ -56,19 +57,19 @@ class PuppeteerOperations {
   }
 
   public async getLayerScreenshots(
-    recordUrl: string,
-    bbox: number[] | undefined,
     productType: string,
-    productId: string
+    productId: string,
+    layerUrlWithMetadata: LayerUrlWithMetadata,
   ): Promise<fsSync.ReadStream | undefined> {
+    const {url, bbox, protocol} = layerUrlWithMetadata;
     const ELEMENT_PADDING = 1.2;
     const browser = container.resolve<Puppeteer.Browser>(BROWSER_CLIENT_TOKEN);
     const page = await browser.newPage();
 
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
-
-      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
+      const productProtocol = typeof protocol !== 'undefined' ? protocol as string : '';
+      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${url}&productType=${productType}&bbox=${JSON.stringify(bbox)}&protocol=${productProtocol}`;
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Requesting presentor url => ${thumbnailPresentorUrl}`);
       await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
       await page.goto(thumbnailPresentorUrl);

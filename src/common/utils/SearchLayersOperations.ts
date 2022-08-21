@@ -7,6 +7,7 @@ import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
 import { ProductType } from '../../thumbnailGenerator/models/ProductType';
 import { Protocols } from '../../thumbnailGenerator/models/Protocols';
+import { LayerUrlWithMetadata } from '../../thumbnailGenerator/interfaces';
 
 @injectable()
 class SearchLayersOperations {
@@ -43,9 +44,9 @@ class SearchLayersOperations {
     }
   }
 
-  public async getLayerUrl(productId: string, productType: ProductType): Promise<{ url: string; bbox?: number[] }> {
+  public async getLayerUrlWithMetadata(productId: string, productType: ProductType): Promise<LayerUrlWithMetadata> {
     try {
-      this.logger.info(`[SearchLayersOperations][getLayerUrl] Gatting url for layer '${productId}'.`);
+      this.logger.info(`[SearchLayersOperations][getLayerUrlWithMetadata] Gatting url for layer '${productId}'.`);
 
       const searchRecordsRes = await this.getLayersForRecord(productType);
       const relevantLayerMetadata = (get(searchRecordsRes, 'data.search') as Record<string, unknown>[]).find(
@@ -78,7 +79,7 @@ class SearchLayersOperations {
         const tileMatrixSet = ((get(layerCapability, 'data.capabilities') as Record<string, unknown>[])[0]?.tileMatrixSet as string[])[0];
         const url = (get(layerLink, 'url') as string).replace('{TileMatrixSet}', tileMatrixSet);
 
-        return { url, bbox };
+        return { url, bbox, protocol: get(layerLink, 'protocol') as Protocols };
       }
       const url = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) =>
         [Protocols.TILESET_3D_LAYER_PROTOCOL, Protocols.TILESET_3D_PROTOCOL].includes(link.protocol as Protocols)
@@ -86,7 +87,7 @@ class SearchLayersOperations {
 
       return { url, bbox };
     } catch (e) {
-      this.logger.error(`[SearchLayersOperations][getLayerUrl] There was an error targeting the requested product '${productId}'.`);
+      this.logger.error(`[SearchLayersOperations][getLayerUrlWithMetadata] There was an error targeting the requested product '${productId}'.`);
       throw new Error(`There was an error targeting the requested product '${productId}'.`);
     }
   }
