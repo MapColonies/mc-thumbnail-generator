@@ -8,6 +8,7 @@ import { inject, injectable, container } from 'tsyringe';
 import { SERVICES } from '../constants';
 import { IConfig } from '../interfaces';
 import { BROWSER_CLIENT_TOKEN } from '../../containerConfig';
+import { LayerUrlWithMetadata } from '../../thumbnailGenerator/interfaces';
 
 enum ThumbnailSizes {
   SMALL = 'sm',
@@ -56,41 +57,53 @@ class PuppeteerOperations {
   }
 
   public async getLayerScreenshots(
-    recordUrl: string,
-    bbox: number[] | undefined,
     productType: string,
-    productId: string
+    productId: string,
+    layerUrlWithMetadata: LayerUrlWithMetadata,
   ): Promise<fsSync.ReadStream | undefined> {
-    this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Launching Puppeteer's browser.`);
-
+    const {url, bbox, protocol} = layerUrlWithMetadata;
+    const ELEMENT_PADDING = 1.2;
     const browser = container.resolve<Puppeteer.Browser>(BROWSER_CLIENT_TOKEN);
     const page = await browser.newPage();
 
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
-
-      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${recordUrl}&productType=${productType}&bbox=${JSON.stringify(bbox)}`;
+      const productProtocol = typeof protocol !== 'undefined' ? protocol as string : '';
+      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${url}&productType=${productType}&bbox=${JSON.stringify(bbox)}&protocol=${productProtocol}`;
+      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Requesting presentor url => ${thumbnailPresentorUrl}`);
       await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
       await page.goto(thumbnailPresentorUrl);
       const thumbnails: Screenshot[] = [];
       await page.waitForSelector(this.targetIconId, { timeout: Number(this.watermarkTimeout) });
       const cesiumElem = await page.$(this.cesiumContainerId);
-      const thumbnailBuffer = await cesiumElem?.screenshot({ type: 'png' });
+      const cesiumElementBBox = await cesiumElem?.boundingBox();
 
-      for (const [sizeName, thumbnailSize] of Object.entries(this.thumbnailSizes)) {
-        const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer)
-          .resize({ ...thumbnailSize })
-          .toBuffer();
+      if (cesiumElementBBox) {
+        const thumbnailBuffer = await cesiumElem?.screenshot({
+          type: 'png',
+          clip: {
+            ...cesiumElementBBox,
+            width: cesiumElementBBox.width * ELEMENT_PADDING,
+          },
+        });
 
-        thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
+        for (const [sizeName, thumbnailSize] of Object.entries(this.thumbnailSizes)) {
+          const resizedThumbnailBuffer = await Sharp(thumbnailBuffer as Buffer)
+            .resize({ ...thumbnailSize })
+            .toBuffer();
+
+          thumbnails.push({ buffer: resizedThumbnailBuffer, fileName: `${productId}-thumbnail-${sizeName}.png` });
+        }
+
+        await page.close();
+
+        this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
+        const zipReadStream = await this.createZipStream(thumbnails);
+
+        return zipReadStream;
       }
 
-      await page.close();
-
-      this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating zip file for download.`);
-      const zipReadStream = await this.createZipStream(thumbnails);
-
-      return zipReadStream;
+      throw new Error(`Couldn't resolve cesium element.`);
     } catch (e) {
       this.logger.error(`[PuppeteerOperations][getLayerScreenshots] There was an error creating the thumbnails. Error: ${e as string}`);
       await page.close();

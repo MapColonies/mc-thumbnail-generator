@@ -80,3 +80,4 @@ defaultAOIBBoxPoints: "[[33.64013671875,33.50475906922609],[37.957763671875,29.0
 serviceUrl: 'http://bff.url'
 zipName: 'Thumbnails.zip'
 watermarkTimeout: '90000'
+loadingTilesTimeout: '20000'

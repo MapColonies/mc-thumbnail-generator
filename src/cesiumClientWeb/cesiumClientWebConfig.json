@@ -1,5 +1,6 @@
 {
-  "token": "",
-  "injectionType": "queryParam",
-  "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
+    "token": "",
+    "injectionType": "queryParam",
+    "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]",
+    "loadingTilesTimeout": "20000"
 }
