@@ -33,7 +33,7 @@ caKey: 'ca.crt'
 
 image:
   repository: mc-thumbnail-generator
-  tag: 'v1.0.8'
+  tag: 'v1.0.21'
 
 env:
   port: 80
@@ -61,11 +61,11 @@ resources:
       memory: 128Mi
 
 route:
-  enabled: false
+  enabled: true
   path: /
   timeout:
     enabled: false # defaults to 30s by openshift
-    duration: 60s # supported units (us, ms, s, m, h, d)
+    duration: 2m # supported units (us, ms, s, m, h, d)
 
 ingress:
   enabled: false
