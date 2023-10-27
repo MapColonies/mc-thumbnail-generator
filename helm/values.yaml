@@ -1,16 +1,11 @@
 global:
-  cloudProvider:
-    dockerRegistryUrl: "localhost:5001"
-    imagePullSecretName: 'my-registry-secret'
-    flavor: openshift
-  tracing: 
-    url: ''
-  metrics: 
-    url: ''
-  environment: ''
+  cloudProvider: {}
+  tracing: {}
+  metrics: {}
+  environment: {}
   clientApp:
-    accessTokenAttributeName: 'token'
-    accessTokenInjectionType: 'queryParam'
+    accessTokenAttributeName: token
+    accessTokenInjectionType: queryParam
     accessTokenTokenValue: ''
 
 enabled: true
@@ -19,20 +14,20 @@ replicaCount: 1
 initialDelaySeconds: 60
 nodePort: 30030 #for minikube deployment only
 resetOnConfigChange: true
-imagePullPolicy: "Always"
+imagePullPolicy: Always
 
 cloudProvider:
-  dockerRegistryUrl: "localhost:5001"
-  imagePullSecretName: 'my-registry-secret'
+  dockerRegistryUrl: localhost:5001
+  imagePullSecretName: my-registry-secret
   flavor: openshift
 
 caSecretName: ''
-caPath: '/usr/local/share/ca-certificates'
-caKey: 'ca.crt'
+caPath: /usr/local/share/ca-certificates
+caKey: ca.crt
 
 image:
   repository: mc-thumbnail-generator
-  tag: 'v1.0.21'
+  tag: v1.0.21
 
 env:
   port: 80
@@ -44,13 +39,13 @@ env:
   requestPayloadLimit: 1mb
   tracing:
     enabled: false
-    url: http://localhost:55681/v1/trace
+    url: http://localhost:55681/v1/traces
   metrics:
     enabled: false
     url: http://localhost:55681/v1/metrics
 
 resources:
-  enabled: false
+  enabled: true
   value:
     limits:
       cpu: 200m
@@ -71,13 +66,13 @@ ingress:
   enabled: false
   type: 'nginx-kubernetes' # supported values: 'nginx-org' | 'nginx-kubernetes'
   path: /
-  host: 'localhost'
+  host:
   cors:
     enabled: true
     origin: '*'
 
 defaultAOIBBoxPoints: "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]"
-serviceUrl: 'http://bff.url'
-zipName: 'Thumbnails.zip'
-watermarkTimeout: '90000'
-loadingTilesTimeout: '20000'
+serviceUrl: http://bff.url
+zipName: Thumbnails.zip
+watermarkTimeout: 90000
+loadingTilesTimeout: 20000
