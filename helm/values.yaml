@@ -13,7 +13,6 @@ global:
     accessTokenInjectionType: 'queryParam'
     accessTokenTokenValue: ''
 
-
 enabled: true
 environment: development
 replicaCount: 1
@@ -54,15 +53,16 @@ resources:
   enabled: false
   value:
     limits:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 200m
+      memory: 200Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 200Mi
 
 route:
   enabled: true
   path: /
+  tls: true
   timeout:
     enabled: false # defaults to 30s by openshift
     duration: 2m # supported units (us, ms, s, m, h, d)
