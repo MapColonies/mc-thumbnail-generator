@@ -1,6 +1,6 @@
 {
-    "token": {{ quote .Values.global.clientApp.accessTokenTokenValue }},
-    "injectionType": {{ quote .Values.global.clientApp.accessTokenInjectionType }},
-    "defaultAOIBBoxPoints": {{ quote .Values.defaultAOIBBoxPoints }},
-    "loadingTilesTimeout": {{ quote .Values.loadingTilesTimeout }}
+    "token": {{ quote .Values.shared.accessToken.tokenValue }},
+    "injectionType": {{ quote .Values.shared.accessToken.injectionType }},
+    "defaultAOIBBoxPoints": {{ quote .Values.env.defaultAOIBBoxPoints }},
+    "loadingTilesTimeout": {{ quote .Values.env.loadingTilesTimeout }}
 }

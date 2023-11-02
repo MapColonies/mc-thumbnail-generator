@@ -7,6 +7,10 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-configmap
 data:
+  ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.shared.accessToken.attributeName }}
+  ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.shared.accessToken.injectionType }}
+  ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.shared.accessToken.tokenValue }}
+  CESIUM_CLIENT_WEB_CONFIG: {{ (tpl (.Files.Get "config/cesiumClientWebConfig.json") . ) | toJson}}
   REQUEST_PAYLOAD_LIMIT: {{ .Values.env.requestPayloadLimit | quote }}
   RESPONSE_COMPRESSION_ENABLED: {{ .Values.env.responseCompressionEnabled | quote }}
   LOG_LEVEL: {{ .Values.env.logLevel | quote }}
@@ -19,13 +23,9 @@ data:
     TELEMETRY_METRICS_ENABLED: 'true'
     TELEMETRY_METRICS_URL: {{ $metricsUrl }}
   {{ end }}
-  THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.zipName }}
-  SERVICE_URL: {{ quote .Values.serviceUrl }}
-  DEFAULT_AOI_BBOX_POINTS: {{ quote .Values.defaultAOIBBoxPoints }}
-  ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.global.clientApp.accessTokenAttributeName }}
-  ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.global.clientApp.accessTokenInjectionType }}
-  ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.global.clientApp.accessTokenTokenValue }}
-  WATERMARK_TIMEOUT: {{ quote .Values.watermarkTimeout}}
-  CESIUM_CLIENT_WEB_CONFIG: {{ (tpl (.Files.Get "config/cesiumClientWebConfig.json") . ) | toJson}}
-  LOADING_TILES_TIMEOUT: {{ quote .Values.loadingTilesTimeout }}
+  THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.env.zipName }}
+  SERVICE_URL: {{ quote .Values.env.serviceUrl }}
+  DEFAULT_AOI_BBOX_POINTS: {{ quote .Values.env.defaultAOIBBoxPoints }}
+  WATERMARK_TIMEOUT: {{ quote .Values.env.watermarkTimeout}}
+  LOADING_TILES_TIMEOUT: {{ quote .Values.env.loadingTilesTimeout }}
 {{- end }}
