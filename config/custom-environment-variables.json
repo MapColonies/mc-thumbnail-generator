@@ -53,19 +53,5 @@
         }
       }
     }
-  },
-  "thumbnailGenerator": {
-    "zipName": "THUMBNAIL_GENERATOR_ZIP_NAME",
-    "tempLocation": "THUMBNAIL_GENERATOR_TEMP_LOCATION",
-    "tempScreenshotLocation": "THUMBNAIL_GENERATOR_TEMP_SCREENSHOT_LOCATION",
-    "thumbnailPresentorUrl": "THUMBNAIL_GENERATOR_THUMBNAIL_PRESENTOR_URL",
-    "targetIconId": "THUMBNAIL_GENERATOR_TARGET_ICON_ID",
-    "cesiumContainerId": "THUMBNAIL_GENERATOR_CESIUM_CONTAINER_ID",
-    "bffUrl": "SERVICE_URL",
-    "token": "ACCESS_TOKEN_TOKEN_VALUE",
-    "tokenInjectionType": "ACCESS_TOKEN_INJECTION_TYPE",
-    "tokenAttributeName": "ACCESS_TOKEN_ATTRIBUTE_NAME",
-    "defaultAOIBBoxPoints": "DEFAULT_AOI_BBOX_POINTS",
-    "watermarkTimeout": "WATERMARK_TIMEOUT"
   }
 }

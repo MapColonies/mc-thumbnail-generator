@@ -45,7 +45,7 @@ export const registerExternalValues = async (options?: RegisterOptions): Promise
 
   const browserClient = await Puppeteer.launch({
     executablePath: '/usr/bin/google-chrome',
-    args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`],
+    args: ['--disable-web-security', '--single-process', `--window-size=${viewPortSize.width},${viewPortSize.height}`, "disable-blink-features=AutomationControlled"],
     userDataDir: './browser-cache',
   });
 
