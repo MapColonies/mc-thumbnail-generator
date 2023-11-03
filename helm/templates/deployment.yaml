@@ -58,10 +58,8 @@ spec:
             - name: SERVER_PORT
               value: {{ .Values.env.targetPort | quote }}
             {{- if .Values.caSecretName }}
-            - name: REQUESTS_CA_BUNDLE
-              value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
             - name: NODE_EXTRA_CA_CERTS
-              value: {{ printf "[%s/%s]" .Values.caPath .Values.caKey | quote }}
+              value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
             {{- end }}
           envFrom:
             - configMapRef:
