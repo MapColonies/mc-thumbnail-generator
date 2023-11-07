@@ -63,6 +63,7 @@ resources:
 
 route:
   enabled: true
+  host:
   path: /
   tls: true
   timeout:
