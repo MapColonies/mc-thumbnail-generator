@@ -54,7 +54,7 @@ spec:
               value: {{ .Values.env.targetPort | quote }}
           envFrom:
             - configMapRef:
-                name: {{ $releaseName }}-configmap
+                name: {{ $releaseName }}-{{ $chartName }}-configmap
           ports:
             - name: http
               containerPort: {{ .Values.env.targetPort }}
@@ -72,7 +72,7 @@ spec:
       volumes:
         - name: cesium-client-root-config
           configMap:
-            name: {{ .Release.Name }}-configmap
+            name: {{ .Release.Name }}-{{ $chartName }}-configmap
             items:
             - key: "CESIUM_CLIENT_WEB_CONFIG"
               path: "cesiumClientWebConfig.json"

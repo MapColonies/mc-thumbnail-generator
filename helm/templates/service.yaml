@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}
+  name: {{ $releaseName }}-{{ $chartName }}
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}

@@ -32,7 +32,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $releaseName }}
+            name: {{ $releaseName }}-{{ $chartName }}
             port:
               number: {{ .Values.env.port }}
     host: {{ .Values.ingress.host | quote }}

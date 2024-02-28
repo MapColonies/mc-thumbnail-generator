@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-configmap
+  name: {{ .Release.Name }}-{{ $chartName }}-configmap
 data:
   ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.shared.accessToken.attributeName }}
   ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.shared.accessToken.injectionType }}
