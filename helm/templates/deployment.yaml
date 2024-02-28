@@ -45,8 +45,8 @@ spec:
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
           {{- end }}
           volumeMounts:
-            - mountPath: "/home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json"
-              name: cesium-client-root-config
+            - name: cesium-client-root-config
+              mountPath: /home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json
               subPath: cesiumClientWebConfig.json
               readOnly: true
           env:

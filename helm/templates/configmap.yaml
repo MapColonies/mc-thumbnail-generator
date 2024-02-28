@@ -20,8 +20,8 @@ data:
   TELEMETRY_TRACING_URL: {{ $tracingUrl }}
   {{ end }}
   {{ if .Values.env.metrics.enabled }}
-    TELEMETRY_METRICS_ENABLED: 'true'
-    TELEMETRY_METRICS_URL: {{ $metricsUrl }}
+  TELEMETRY_METRICS_ENABLED: 'true'
+  TELEMETRY_METRICS_URL: {{ $metricsUrl }}
   {{ end }}
   THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.env.zipName }}
   SERVICE_URL: {{ quote .Values.env.serviceUrl }}
