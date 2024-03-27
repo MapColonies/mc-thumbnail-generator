@@ -1,6 +1,5 @@
 {{- $releaseName := .Release.Name -}}
 {{- $chartName := include "mc-thumbnail-generator.name" . -}}
-{{- $cloudProviderFlavor := include "mc-thumbnail-generator.cloudProviderFlavor" . -}}
 {{- $cloudProviderDockerRegistryUrl := include "mc-thumbnail-generator.cloudProviderDockerRegistryUrl" . -}}
 {{- $cloudProviderImagePullSecretName := include "mc-thumbnail-generator.cloudProviderImagePullSecretName" . -}}
 {{- $imageTag := include "mc-thumbnail-generator.tag" . -}}
