@@ -36,4 +36,8 @@ spec:
             port:
               number: {{ .Values.env.port }}
     host: {{ .Values.ingress.host | quote }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host | quote }}
+    secretName: {{ .Values.ingress.tls.useExternal | quote }}
 {{- end -}}
