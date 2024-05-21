@@ -43,6 +43,9 @@ spec:
           {{- with .Values.image }}
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
           {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 0
           volumeMounts:
             - name: cesium-client-root-config
               mountPath: /home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json
