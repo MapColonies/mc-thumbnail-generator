@@ -16,6 +16,7 @@ replicaCount: 1
 initialDelaySeconds: 60
 nodePort: 30030 #for minikube deployment only
 resetOnConfigChange: true
+runAsUser: 1001050000
 imagePullPolicy: Always
 
 cloudProvider:
