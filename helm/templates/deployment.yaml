@@ -45,7 +45,7 @@ spec:
           {{- end }}
           securityContext:
             runAsNonRoot: true
-            # runAsUser: 1
+            runAsUser: 1001050000
           volumeMounts:
             - name: cesium-client-root-config
               mountPath: /home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json
