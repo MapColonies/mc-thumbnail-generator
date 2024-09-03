@@ -1,8 +1,23 @@
 global:
-  cloudProvider: {}
-  tracing: {}
-  metrics: {}
-  environment: ''
+  configManagment:
+    enabled: false
+  imageRegistry: acrarolibotnonprod.azurecr.io
+  imagePullSecrets:
+    - my-registry
+  deploymentFlavor: openshift
+  tlsCertificates:
+    certificate:
+    key:
+    caCertificate:
+  tracing:
+    enabled: false
+    url: http://localhost:55681/v1/traces
+  metrics:
+    enabled: false
+    url: http://localhost:55681/v1/metrics
+  environment: development
+  releaseVersion: DUMMY_releaseVersion
+  currentSubChart: DUMMY_currentSubChart
 
 shared:
   accessToken:
@@ -10,70 +25,130 @@ shared:
     injectionType: queryParam
     tokenValue: ''
 
-enabled: true
-environment: development
-replicaCount: 1
-initialDelaySeconds: 60
-nodePort: 30030 #for minikube deployment only
-resetOnConfigChange: true
-runAsUser: 1001050000
-imagePullPolicy: Always
-
-cloudProvider:
-  dockerRegistryUrl: localhost:5001
-  imagePullSecretName: my-registry-secret
-  flavor: openshift
-
-image:
-  repository: mc-thumbnail-generator
-  tag: v1.0.21
-
-env:
-  port: 80
-  targetPort: 3000
-  protocol: TCP
-  logLevel: info
-  logPrettyPrintEnabled: false
-  responseCompressionEnabled: true
-  requestPayloadLimit: 1mb
-  tracing:
-    enabled: false
-    url: http://localhost:55681/v1/traces
+kubeVersion:
+commonLabels:
+commonAnnotations:
+# ----------- initContainers ----------
+volumePermissions:
+  enabled: false
+# ------ volumes and volumeMounts -----
+persistence:
+  enabled: false
+# ----------- command/debug -----------
+diagnosticMode:
+  enabled: false
+# --------- MAIN_OBJECT_BLOCK ---------
+configValues:
+  deploymentAnnotations:
+    # collectord.io/index: '' # PROVIDE SPLUNK INDEX
+  autoscaling:
+    hpa:
+      enabled: false
+  replicaCount: 1
+  podAnnotations:
+    enabled: true
+    resetOnConfigChange: true
+    annotations: {}
+  prometheus:
+    scrape: false
   metrics:
     enabled: false
-    url: http://localhost:55681/v1/metrics
-  defaultAOIBBoxPoints: '[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]'
-  serviceUrl: http://bff.url
-  zipName: Thumbnails.zip
-  watermarkTimeout: 90000
-  loadingTilesTimeout: 20000
-
-resources:
-  enabled: true
-  value:
+  tracing:
+    enabled: false
+  nodeAffinityPreset: {}
+  podSecurityContext: {}
+  # ----------- containers ------------
+  image:
+    repository: mc-thumbnail-generator
+    tag: v1.0.21
+    pullPolicy: Always
+    debug: false
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 1000700000
+  extraEnvVars:
+    - name: SERVER_PORT
+      value: '{{ .Values.configValues.containerPorts.http }}'
+  extraEnvVarsCM: '{{ template "common.names.fullname" . }}'
+  extraEnvVarsSecret:
+  resources:
     limits:
       cpu: 200m
       memory: 200Mi
     requests:
       cpu: 50m
       memory: 200Mi
-
+  containerPorts:
+    http: 3000
+    https: 443
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled : false
+  startupProbe:
+    enabled : false
+  extraVolumeMounts:
+    - name: cesium-client-root-config
+      mountPath: /home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json
+      subPath: cesiumClientWebConfig.json
+      readOnly: true
+  extraVolumes:
+    - name: cesium-client-root-config
+      configMap:
+        name: '{{ template "common.names.fullname" . }}'
+        items:
+        - key: "CESIUM_CLIENT_WEB_CONFIG"
+          path: "cesiumClientWebConfig.json"
+env:
+  logLevel: info
+  logPrettyPrintEnabled: false
+  responseCompressionEnabled: true
+  requestPayloadLimit: 1mb
+  defaultAOIBBoxPoints: '[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]'
+  serviceUrl: http://bff.url
+  zipName: Thumbnails.zip
+  watermarkTimeout: 90000
+  loadingTilesTimeout: 20000
 route:
   enabled: true
-  host:
-  path: /
-  tls: true
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
   timeout:
-    enabled: false # defaults to 30s by openshift
-    duration: 2m # supported units (us, ms, s, m, h, d)
-
+    enabled: false
+    duration: 60s
+  hostname:
+  path: /
+  targetPort: http
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+    useCerts: false
+  extraRules:
 ingress:
   enabled: false
-  type: nginx-kubernetes # supported values: 'nginx-org' | 'nginx-kubernetes'
-  host:
-  path: /
-  cors:
-    enabled: true
-    origin: '*'
-  tls:
-    useExternal:
+  # apiVersion: ""
+  # type: nginx-kubernetes
+  # annotations: {}
+  # pathType: Prefix
+  # hostname: COMPONENT_NAME.local
+  # extraHosts: []
+  # extraPaths: []
+  # path: /service-discovery
+  # extraRules: []
+  # extraTls: []
+  # selfSigned: false
+  # tls: true
+  # cors:
+  #   enabled: true
+  #   origin: '*'
+service:
+  annotations: {}
+  ports:
+    http: 80
+  protocol: TCP
+serviceAccount:
+  create: false
+  name: ""
+  annotations: {}

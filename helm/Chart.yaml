@@ -4,3 +4,7 @@ description: A Helm chart for mc-thumbnail-generator service
 type: application
 version: 1.0.21
 appVersion: 1.0.21
+dependencies:
+  - name: common
+    version: 1.0.1
+    repository: file://../../helm-common
