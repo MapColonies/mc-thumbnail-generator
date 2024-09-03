@@ -113,3 +113,5 @@ reports
 
 src/common/temp
 src/cesiumClientWeb/scripts
+
+browser-cache
