@@ -1,15 +1,16 @@
 @font-face {
   font-family: 'MC-icons';
-  src: url('fonts/MC-icons.eot?mki3o5');
-  src: url('fonts/MC-icons.eot?mki3o5#iefix') format('embedded-opentype'), url('fonts/MC-icons.ttf?mki3o5') format('truetype'),
-    url('fonts/MC-icons.woff?mki3o5') format('woff'), url('fonts/MC-icons.svg?mki3o5#MC-icons') format('svg');
+  src:  url('fonts/MC-icons.eot?mki3o5');
+  src:  url('fonts/MC-icons.eot?mki3o5#iefix') format('embedded-opentype'),
+    url('fonts/MC-icons.ttf?mki3o5') format('truetype'),
+    url('fonts/MC-icons.woff?mki3o5') format('woff'),
+    url('fonts/MC-icons.svg?mki3o5#MC-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^='mc-icon-'],
-[class*=' mc-icon-'] {
+[class^="mc-icon-"], [class*=" mc-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'MC-icons' !important;
   speak: never;
@@ -18,194 +19,150 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
+
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .mc-icon-Arrow-Left:before {
-  content: '\e919';
+  content: "\e919";
 }
-
 .mc-icon-Arrow-Right:before {
-  content: '\e91a';
+  content: "\e91a";
 }
-
 .mc-icon-Move-Row:before {
-  content: '\e91b';
+  content: "\e91b";
 }
-
 .mc-icon-Status-Approves:before {
-  content: '\e90c';
+  content: "\e90c";
 }
-
 .mc-icon-Status-Downloads:before {
-  content: '\e90f';
+  content: "\e90f";
 }
-
 .mc-icon-Status-Messages:before {
-  content: '\e910';
+  content: "\e910";
 }
-
 .mc-icon-Status-Warnings:before {
-  content: '\e918';
+  content: "\e918";
 }
-
 .mc-icon-Catalog:before {
-  content: '\e903';
+  content: "\e903";
 }
-
 .mc-icon-Bests:before {
-  content: '\e904';
+  content: "\e904";
 }
-
 .mc-icon-Search-History:before {
-  content: '\e905';
+  content: "\e905";
 }
-
 .mc-icon-System-Missions:before {
-  content: '\e91c';
+  content: "\e91c";
 }
-
 .mc-icon-Property-1Add:before {
-  content: '\e91d';
+  content: "\e91d";
 }
-
 .mc-icon-Save:before {
-  content: '\e90a';
+  content: "\e90a";
 }
-
 .mc-icon-Delete:before {
-  content: '\e913';
+  content: "\e913";
 }
-
 .mc-icon-Edit:before {
-  content: '\e91e';
+  content: "\e91e";
 }
-
 .mc-icon-Refresh:before {
-  content: '\e90b';
+  content: "\e90b";
 }
-
 .mc-icon-Copy:before {
-  content: '\e91f';
+  content: "\e91f";
 }
-
 .mc-icon-Shown:before {
-  content: '\e920';
+  content: "\e920";
 }
-
 .mc-icon-Hidden:before {
-  content: '\e921';
+  content: "\e921";
 }
-
 .mc-icon-Ok:before {
-  content: '\e922';
+  content: "\e922";
 }
-
 .mc-icon-Warning:before {
-  content: '\e923';
+  content: "\e923";
 }
-
 .mc-icon-Search:before {
-  content: '\e911';
+  content: "\e911";
 }
-
 .mc-icon-Coordinates:before {
-  content: '\e906';
+  content: "\e906";
 }
-
 .mc-icon-Set-Coordinates:before {
-  content: '\e924';
+  content: "\e924";
 }
-
 .mc-icon-Ellipce:before {
-  content: '\e907';
+  content: "\e907";
 }
-
 .mc-icon-Rectangle:before {
-  content: '\e908';
+  content: "\e908";
 }
-
 .mc-icon-Map-Vector:before {
-  content: '\e925';
+  content: "\e925";
 }
-
 .mc-icon-Map-3D:before {
-  content: '\e926';
+  content: "\e926";
 }
-
 .mc-icon-Map-Terrain:before {
-  content: '\e927';
+  content: "\e927";
 }
-
 .mc-icon-Map-Orthophoto:before {
-  content: '\e928';
+  content: "\e928";
 }
-
 .mc-icon-Map-Raster:before {
-  content: '\e929';
+  content: "\e929";
 }
-
 .mc-icon-Map-Best-Raster:before {
-  content: '\e92a';
+  content: "\e92a";
 }
-
 .mc-icon-Map-Best-Orthophoto:before {
-  content: '\e92b';
+  content: "\e92b";
 }
-
 .mc-icon-Polygon:before {
-  content: '\e909';
+  content: "\e909";
 }
-
 .mc-icon-Close:before {
-  content: '\e90d';
+  content: "\e90d";
 }
-
 .mc-icon-Arrows-Left:before {
-  content: '\e90e';
+  content: "\e90e";
 }
-
 .mc-icon-Arrows-Right:before {
-  content: '\e912';
+  content: "\e912";
 }
-
 .mc-icon-Back:before {
-  content: '\e92c';
+  content: "\e92c";
 }
-
 .mc-icon-Next:before {
-  content: '\e92d';
+  content: "\e92d";
 }
-
 .mc-icon-Filter:before {
-  content: '\e900';
+  content: "\e900";
 }
-
 .mc-icon-Filter-On .path1:before {
-  content: '\e901';
+  content: "\e901";
   color: rgb(175, 191, 218);
 }
-
 .mc-icon-Filter-On .path2:before {
-  content: '\e902';
+  content: "\e902";
   margin-left: -1em;
   color: rgb(242, 239, 205);
 }
-
 .mc-icon-Expand-Panel:before {
-  content: '\e914';
+  content: "\e914";
 }
-
 .mc-icon-Collapce-Panel:before {
-  content: '\e915';
+  content: "\e915";
 }
-
 .mc-icon-Table-Fill-Off:before {
-  content: '\e916';
+  content: "\e916";
 }
-
 .mc-icon-Table---Fill-On:before {
-  content: '\e917';
+  content: "\e917";
 }
