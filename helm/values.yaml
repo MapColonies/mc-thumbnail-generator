@@ -55,8 +55,6 @@ configValues:
     enabled: false
   tracing:
     enabled: false
-  nodeAffinityPreset: {}
-  podSecurityContext: {}
   # ----------- containers ------------
   image:
     repository: mc-thumbnail-generator
