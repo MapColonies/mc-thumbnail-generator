@@ -8,10 +8,10 @@
   REQUEST_PAYLOAD_LIMIT: {{ .Values.env.requestPayloadLimit | quote }}
   RESPONSE_COMPRESSION_ENABLED: {{ .Values.env.responseCompressionEnabled | quote }}
 {{- end }}
-  ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.shared.accessToken.attributeName }}
-  ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.shared.accessToken.injectionType }}
-  ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.shared.accessToken.tokenValue }}
   CESIUM_CLIENT_WEB_CONFIG: {{ (tpl (.Files.Get "config/cesiumClientWebConfig.json") . ) | toJson}}
+  ACCESS_TOKEN_ATTRIBUTE_NAME: {{ quote .Values.global.shared.accessToken.attributeName }}
+  ACCESS_TOKEN_INJECTION_TYPE: {{ quote .Values.global.shared.accessToken.injectionType }}
+  ACCESS_TOKEN_TOKEN_VALUE: {{ quote .Values.global.shared.accessToken.tokenValue }}
   THUMBNAIL_GENERATOR_ZIP_NAME: {{ quote .Values.env.zipName }}
   SERVICE_URL: {{ quote .Values.env.serviceUrl }}
   DEFAULT_AOI_BBOX_POINTS: {{ quote .Values.env.defaultAOIBBoxPoints }}

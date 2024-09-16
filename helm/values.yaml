@@ -18,12 +18,11 @@ global:
   environment: development
   releaseVersion: DUMMY_releaseVersion
   currentSubChart: DUMMY_currentSubChart
-
-shared:
-  accessToken:
-    attributeName: token
-    injectionType: queryParam
-    tokenValue: ''
+  shared:
+    accessToken:
+      attributeName: token
+      injectionType: queryParam
+      tokenValue: ''
 
 commonLabels:
 commonAnnotations:

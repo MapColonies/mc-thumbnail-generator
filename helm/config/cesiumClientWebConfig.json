@@ -1,6 +1,6 @@
 {
-    "token": {{ quote .Values.shared.accessToken.tokenValue }},
-    "injectionType": {{ quote .Values.shared.accessToken.injectionType }},
+    "token": {{ quote .Values.global.shared.accessToken.tokenValue }},
+    "injectionType": {{ quote .Values.global.shared.accessToken.injectionType }},
     "defaultAOIBBoxPoints": {{ quote .Values.env.defaultAOIBBoxPoints }},
     "loadingTilesTimeout": {{ quote .Values.env.loadingTilesTimeout }}
 }
