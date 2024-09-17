@@ -81,9 +81,9 @@ configValues:
   livenessProbe:
     enabled: false
   readinessProbe:
-    enabled : false
+    enabled: false
   startupProbe:
-    enabled : false
+    enabled: false
   extraVolumeMounts:
     - name: cesium-client-root-config
       mountPath: /home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json
