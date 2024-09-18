@@ -25,6 +25,9 @@ global:
       injectionType: queryParam
       tokenValue: ''
 
+nameOverride:
+fullnameOverride:
+# --------------- common --------------
 commonLabels:
 commonAnnotations:
 # ----------- initContainers ----------
