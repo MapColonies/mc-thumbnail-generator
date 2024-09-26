@@ -28,7 +28,10 @@
     "copyassets:all": "npm run copyassets:cesium && npm run copyassets:mc-fonts && npm run copyassets:turf",
     "copyassets:cesium": "copyfiles -u 3 \"./node_modules/cesium/Build/Cesium/**/*\" \"./src/cesiumClientWeb/scripts\"",
     "copyassets:turf": "copyfiles -u 1 \"./node_modules/@turf/turf/turf.min.js\" \"./src/cesiumClientWeb/scripts\"",
-    "copyassets:mc-fonts": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/fonts/*\" \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/style.css\" \"./src/cesiumClientWeb/public/fonts/mc-icons\""
+    "copyassets:mc-fonts": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/fonts/*\" \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/style.css\" \"./src/cesiumClientWeb/public/fonts/mc-icons\"",
+    "helm-update": "helm dependency update helm",
+    "helm-assets": "npm run helm-update && tar -xzvf ./helm/charts/helm-common*.tgz --strip-components=1 helm-common/schemas",
+    "helm-install": "npm run helm-update && helm install -f 'helm/global.yaml' -f 'helm/values.yaml' mc-thumbnail-generator helm"
   },
   "directories": {
     "test": "tests"
