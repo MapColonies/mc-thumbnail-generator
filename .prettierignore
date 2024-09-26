@@ -15,3 +15,5 @@ helm
 reports
 src/common/temp
 src/cesiumClientWeb/scripts
+.vscode/settings.json
+schemas/*.json

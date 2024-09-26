@@ -7,4 +7,4 @@ appVersion: 1.0.22
 dependencies:
   - name: helm-common
     version: 1.0.1
-    repository: oci://acrarolibotnonprod.azurecr.io/helm/common
+    repository: oci://acrarolibotnonprod.azurecr.io/helm/library
