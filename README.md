@@ -62,10 +62,9 @@ npm run test:integration
 
 ## Deployment
 
-Before you start this process there is something importent you sholuld know:
-
-    We depend on `Red-Hat Yaml Extention` for validate the values files against the relevant schemas from helm-common.
-    That means, you should install the extention from vscode in order to be able to edit values files according to our schemas.
+> [!IMPORTANT] 
+> We depend on `Red-Hat Yaml Extention` for validating the values files against the relevant schemas from helm-common.
+> That means, you should install the extention from vscode in order to be able to edit values files according to our schemas.
   
 To update helm dependencies
 ```bash
