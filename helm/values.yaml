@@ -22,7 +22,7 @@ configValues:
   podAnnotations:
     enabled: true
     resetOnConfigChange: true
-    annotations: {}
+    annotations:
   prometheus:
     scrape: false
   metrics:
@@ -104,7 +104,7 @@ ingress:
   enabled: false
   apiVersion:
   type: nginx-kubernetes
-  annotations: {}
+  annotations:
   pathType: Prefix
   hostname: libot.wwest.local
   extraHosts: []
@@ -118,7 +118,7 @@ ingress:
     enabled: true
     origin: '*'
 service:
-  annotations: {}
+  annotations:
   ports:
     http: 80
   protocol: TCP

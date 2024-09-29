@@ -31,7 +31,8 @@
     "copyassets:mc-fonts": "copyfiles -u 6 \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/fonts/*\" \"./node_modules/@map-colonies/static-assets/dist/fonts/mc-font/style.css\" \"./src/cesiumClientWeb/public/fonts/mc-icons\"",
     "helm-update": "helm dependency update helm",
     "helm-assets": "npm run helm-update && tar -xzvf ./helm/charts/helm-common*.tgz --strip-components=1 helm-common/schemas",
-    "helm-install": "npm run helm-update && helm install -f 'helm/global.yaml' -f 'helm/values.yaml' mc-thumbnail-generator helm"
+    "helm-install": "npm run helm-update && helm install -f 'helm/global.yaml' -f 'helm/values.yaml' mc-thumbnail-generator helm",
+    "helm-uninstall": "helm uninstall mc-thumbnail-generator"
   },
   "directories": {
     "test": "tests"
