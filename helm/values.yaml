@@ -103,7 +103,7 @@ route:
 ingress:
   enabled: false
   apiVersion:
-  type: nginx-kubernetes
+  type: nginx-org
   annotations:
   pathType: Prefix
   hostname: libot.wwest.local
