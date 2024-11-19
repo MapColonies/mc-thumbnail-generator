@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/MapColonies/mc-thumbnail-generator/compare/v1.1.1...v1.1.2) (2024-11-19)
+
+
+### Bug Fixes
+
+* helm artifacts ([7277d42](https://github.com/MapColonies/mc-thumbnail-generator/commit/7277d4263bfb59ddf49268c5dce876eb9e8dd5d6))
+
 ### [1.1.1](https://github.com/MapColonies/mc-thumbnail-generator/compare/v1.1.0...v1.1.1) (2024-11-10)
 
 
