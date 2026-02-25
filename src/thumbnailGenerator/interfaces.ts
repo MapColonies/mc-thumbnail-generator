@@ -1,4 +1,4 @@
-import { Protocols } from "./models/Protocols";
+import { Protocols } from './models/Protocols';
 
 export interface LayerUrlWithMetadata {
   url: string;

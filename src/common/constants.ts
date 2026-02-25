@@ -16,7 +16,7 @@ export const SERVICES: Record<string, symbol> = {
   SEARCH_LAYER_OPERATIONS: Symbol('SearchLayersOperations'),
 };
 
-export const UTILS:  Record<string, symbol> = {
+export const UTILS: Record<string, symbol> = {
   BROWSER_EVENT_HANDLERS: Symbol('BrowserEventHandlers'),
 }
 /* eslint-enable @typescript-eslint/naming-convention */

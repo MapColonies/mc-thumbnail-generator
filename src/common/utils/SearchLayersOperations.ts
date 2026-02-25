@@ -21,23 +21,23 @@ class SearchLayersOperations {
     this.logger.info(`[SearchLayersOperations][getLayersForRecord] Searching layers for product ${productType}`);
     try {
       const bffSearchQueryRes = await axios.post(
-          this.bffUrl,
-          {
-              query: "query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {\n__typename\n... on Layer3DRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n\n... on LayerDemRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}} }",
-              variables: {
-                  opts: {
-                      filter: [
-                          {
-                              field: "mc:type",
-                              eq: productType
-                          }
-                      ]
-                  },
-                  end: 1000,
-                  start: 1
-              }
-          },
-          { headers: { origin: "thumbnail-generator" } }
+        this.bffUrl,
+        {
+          query: "query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {\n__typename\n... on Layer3DRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n\n... on LayerDemRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}} }",
+          variables: {
+            opts: {
+              filter: [
+                {
+                  field: "mc:type",
+                  eq: productType
+                }
+              ]
+            },
+            end: 1000,
+            start: 1
+          }
+        },
+        { headers: { origin: "thumbnail-generator" } }
       );
 
 

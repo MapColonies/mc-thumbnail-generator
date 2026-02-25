@@ -11,18 +11,18 @@ const RECORD_PROTOCOLS = {
   XYZ_LAYER: 'XYZ_LAYER',
 };
 const DEFAULT_AOI_BBOX_POINTS = JSON.parse(
-    config.defaultAOIBBoxPoints
+  config.defaultAOIBBoxPoints
 );
 const MIN_AOI_TO_BBOX_RATIO = 0.2;
 const INJECTION_TYPE = config.injectionType;
 const LOADING_TILES_TIMEOUT = parseInt(config.loadingTilesTimeout);
-const Cesium3DTileContentState = { 
-  UNLOADED:0,
-  LOADING:1,
-  PROCESSING:2,
-  READY:3,
-  EXPIRED:4,
-  FAILED:5
+const Cesium3DTileContentState = {
+  UNLOADED: 0,
+  LOADING: 1,
+  PROCESSING: 2,
+  READY: 3,
+  EXPIRED: 4,
+  FAILED: 5
 };
 
 const getAuthObject = () => {
@@ -68,9 +68,9 @@ const tilesLoadedPromise = () => {
 };
 
 const tilesetLoadedPromise = (tileset) => {
-  return new Promise((resolve)=>{
-    const loadingTilesTimeout = setTimeout(()=>resolve(true), LOADING_TILES_TIMEOUT);
-    tileset.allTilesLoaded.addEventListener(()=> {
+  return new Promise((resolve) => {
+    const loadingTilesTimeout = setTimeout(() => resolve(true), LOADING_TILES_TIMEOUT);
+    tileset.allTilesLoaded.addEventListener(() => {
       // console.log('_selectedTiles tilesetLoadedPromise--->', tileset.root.content.tile.content.tileset._selectedTiles); 
       clearTimeout(loadingTilesTimeout);
       resolve(true);
@@ -196,22 +196,22 @@ const getSuitableBBox = (layerBBox) => {
 // Debugging Helpers
 
 const drawLayerRectangle = (rectangle, color = false) => {
-    // Color argument should be of cesium colors e.g => Cesium.Color.YELLOW.withAlpha(0.5)
-    // default is red.
+  // Color argument should be of cesium colors e.g => Cesium.Color.YELLOW.withAlpha(0.5)
+  // default is red.
 
-    const rectPrimitive = viewer.scene.primitives.add(new Cesium.Primitive({
-    geometryInstances : new Cesium.GeometryInstance({
-        geometry : new Cesium.RectangleGeometry({
-            rectangle
-        })
+  const rectPrimitive = viewer.scene.primitives.add(new Cesium.Primitive({
+    geometryInstances: new Cesium.GeometryInstance({
+      geometry: new Cesium.RectangleGeometry({
+        rectangle
+      })
     }),
-    appearance : new Cesium.EllipsoidSurfaceAppearance({
-        aboveGround : false,
-        material: Cesium.Material.fromType('Color')
+    appearance: new Cesium.EllipsoidSurfaceAppearance({
+      aboveGround: false,
+      material: Cesium.Material.fromType('Color')
     })
   }));
 
-  if(color) {
+  if (color) {
     rectPrimitive.appearance.material.uniforms.color = color;
   }
 
@@ -224,7 +224,7 @@ const drawModelBoundingSphere = (boundingSphere, color = false) => {
     name: 'Bounding Sphere',
     position: boundingSphere.center,
     ellipsoid: {
-      radii:  new Cesium.Cartesian3(boundingSphere.radius, boundingSphere.radius, boundingSphere.radius),
+      radii: new Cesium.Cartesian3(boundingSphere.radius, boundingSphere.radius, boundingSphere.radius),
       material: color || Cesium.Color.RED.withAlpha(0.5),
       outline: true,
       outlineColor: Cesium.Color.BLACK,
@@ -247,7 +247,7 @@ const render3DTileset = async () => {
     // if(tp.length > 0){
     //   console.log("level:" + tp[0].level);
     // }
-    
+
     const initialValue = Cesium3DTileContentState.UNLOADED;
     const sumWithInitial = tileset.root.children.reduce(
       (previousValue, current) => {
@@ -255,28 +255,28 @@ const render3DTileset = async () => {
       },
       initialValue
     );
-    
+
     // All contents are in UNLOADED state then zoom-in
-    if(sumWithInitial === Cesium3DTileContentState.UNLOADED){
+    if (sumWithInitial === Cesium3DTileContentState.UNLOADED) {
       setCameraToProperHeightAndPos(tryNum++);
     }
   });
 
   const tileset = viewer.scene.primitives.add(
     new Cesium.Cesium3DTileset({
-        // debugShowContentBoundingVolume: true,
-        url: new Cesium.Resource({
-          url,
-          ...getAuthObject()
-        })
+      // debugShowContentBoundingVolume: true,
+      url: new Cesium.Resource({
+        url,
+        ...getAuthObject()
       })
+    })
   );
- 
+
   await new Promise(resolve => {
     tileset.readyPromise.then(() => {
-      viewer.camera.flyToBoundingSphere(tileset.boundingSphere,{
+      viewer.camera.flyToBoundingSphere(tileset.boundingSphere, {
         duration: 0,
-        complete: ()=> {
+        complete: () => {
           setCameraToProperHeightAndPos();
           resolve(true);
         }
@@ -346,9 +346,9 @@ const renderRasterLayer = () => {
 switch (productType) {
   case 'RECORD_3D': {
     render3DTileset()
-            .then(() => {
-              appendIconByProductType('RECORD_3D');
-            });
+      .then(() => {
+        appendIconByProductType('RECORD_3D');
+      });
 
     break;
   }

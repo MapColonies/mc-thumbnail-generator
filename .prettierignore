@@ -16,6 +16,6 @@ coverage
 helm
 reports
 src/common/temp
-src/cesiumClientWeb/scripts
+src/cesiumClientWeb
 .vscode/settings.json
 schemas/*.json

@@ -1,43 +1,43 @@
 {
-    "openapiConfig": {
-        "filePath": "./openapi3.yaml",
-        "basePath": "/docs",
-        "rawPath": "/api",
-        "uiPath": "/api"
-    },
-    "telemetry": {
-        "logger": {
-            "level": "info",
-            "prettyPrint": false
-        }
-    },
-    "server": {
-        "port": "3000",
-        "request": {
-            "payload": {
-                "limit": "1mb"
-            }
-        },
-        "response": {
-            "compression": {
-                "enabled": true,
-                "options": null
-            }
-        }
-    },
-    "thumbnailGenerator": {
-        "zipName": "Thumbnails.zip",
-        "tempLocation": "src/common/temp",
-        "tempScreenshotLocation": "src/common/temp/screenshots",
-        "thumbnailPresentorUrl": "http://localhost:4000",
-        "targetIconId": "#layerIcon",
-        "cesiumContainerId": "#cesiumContainer",
-        "watermarkTimeout": "90000",
-        "bffUrl": "",
-        "token": "",
-        "tokenInjectionType": "queryParam",
-        "tokenAttributeName": "token",
-        "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]",
-        "loadingTilesTimeout": "20000"
+  "openapiConfig": {
+    "filePath": "./openapi3.yaml",
+    "basePath": "/docs",
+    "rawPath": "/api",
+    "uiPath": "/api"
+  },
+  "telemetry": {
+    "logger": {
+      "level": "info",
+      "prettyPrint": false
     }
+  },
+  "server": {
+    "port": "3000",
+    "request": {
+      "payload": {
+        "limit": "1mb"
+      }
+    },
+    "response": {
+      "compression": {
+        "enabled": true,
+        "options": null
+      }
+    }
+  },
+  "thumbnailGenerator": {
+    "zipName": "Thumbnails.zip",
+    "tempLocation": "src/common/temp",
+    "tempScreenshotLocation": "src/common/temp/screenshots",
+    "thumbnailPresentorUrl": "http://localhost:4000",
+    "targetIconId": "#layerIcon",
+    "cesiumContainerId": "#cesiumContainer",
+    "watermarkTimeout": "90000",
+    "bffUrl": "",
+    "token": "",
+    "tokenInjectionType": "queryParam",
+    "tokenAttributeName": "token",
+    "defaultAOIBBoxPoints": "[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]",
+    "loadingTilesTimeout": "20000"
+  }
 }
