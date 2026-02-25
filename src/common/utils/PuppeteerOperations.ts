@@ -84,8 +84,10 @@ class PuppeteerOperations {
 
     try {
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Generating thumbnails...`);
-      const productProtocol = typeof protocol !== 'undefined' ? protocol as string : '';
-      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${url}&productType=${productType}&bbox=${JSON.stringify(bbox)}&protocol=${productProtocol}`;
+      const productProtocol = typeof protocol !== 'undefined' ? (protocol as string) : '';
+      const thumbnailPresentorUrl = `${this.thumbnailPresentorUrl}/?url=${url}&productType=${productType}&bbox=${JSON.stringify(
+        bbox
+      )}&protocol=${productProtocol}`;
       this.logger.info(`[PuppeteerOperations][getLayerScreenshots] Requesting presentor url => ${thumbnailPresentorUrl}`);
       await fs.mkdir(this.tempScreenshotLocation, { recursive: true });
       await page.goto(thumbnailPresentorUrl);
@@ -108,7 +110,6 @@ class PuppeteerOperations {
       const zipReadStream = await this.createZipStream(thumbnails);
 
       return zipReadStream;
-
     } catch (e) {
       this.logger.error(`[PuppeteerOperations][getLayerScreenshots] There was an error creating the thumbnails. Error: ${e as string}`);
       await page.close();
