@@ -23,24 +23,23 @@ class SearchLayersOperations {
       const bffSearchQueryRes = await axios.post(
         this.bffUrl,
         {
-          query: "query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {\n__typename\n... on Layer3DRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n\n... on LayerDemRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}} }",
+          query:
+            'query search($opts: SearchOptions, $end: Float, $start: Float) { search(opts: $opts, end: $end, start: $start) {\n__typename\n... on Layer3DRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n... on LayerRasterRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}\n\n... on LayerDemRecord {\n\n__typename\nid\ntype\nproductId\nfootprint\nlinks {\n\n__typename\nname\ndescription\nprotocol\nurl\n\n}\n\n}} }',
           variables: {
             opts: {
               filter: [
                 {
-                  field: "mc:type",
-                  eq: productType
-                }
-              ]
+                  field: 'mc:type',
+                  eq: productType,
+                },
+              ],
             },
             end: 1000,
-            start: 1
-          }
+            start: 1,
+          },
         },
-        { headers: { origin: "thumbnail-generator" } }
+        { headers: { origin: 'thumbnail-generator' } }
       );
-
-
 
       return bffSearchQueryRes.data as Record<string, unknown>;
     } catch (e) {
@@ -61,8 +60,8 @@ class SearchLayersOperations {
       const bbox = BBox(get(relevantLayerMetadata, 'footprint'));
 
       if (productType !== ProductType.RECORD_3D) {
-        const layerLink = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find(
-          (link) => [Protocols.RASTER_LAYER_PROTOCOL, Protocols.RASTER_XYZ_LAYER_PROTOCOL].includes(link.protocol as Protocols)
+        const layerLink = (get(relevantLayerMetadata, 'links') as Record<string, unknown>[]).find((link) =>
+          [Protocols.RASTER_LAYER_PROTOCOL, Protocols.RASTER_XYZ_LAYER_PROTOCOL].includes(link.protocol as Protocols)
         );
 
         const bffGetCapabilities = await axios.post(this.bffUrl, {
