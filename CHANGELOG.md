@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.1](https://github.com/MapColonies/mc-thumbnail-generator/compare/v3.1.0...v3.1.1) (2026-03-19)
+
+
+### Bug Fixes
+
+* artifacts.json in build-and-push.yaml ([8e2b227](https://github.com/MapColonies/mc-thumbnail-generator/commit/8e2b227543d98648f99c408118942c5384524ac4))
+* artifacts.json in build-and-push.yaml ([526f0bf](https://github.com/MapColonies/mc-thumbnail-generator/commit/526f0bf2e5a8217d1c15bcf044ec13efa93af775))
+
 ## [3.1.0](https://github.com/MapColonies/mc-thumbnail-generator/compare/v3.0.0...v3.1.0) (2026-02-25)
 
 
