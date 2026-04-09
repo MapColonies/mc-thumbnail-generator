@@ -12,6 +12,10 @@ persistence:
 # ----------- command/debug -----------
 diagnosticMode:
   enabled: false
+  # command:
+  #   - sleep
+  # args:
+  #   - infinity
 # --------- MAIN_OBJECT_BLOCK ---------
 configValues:
   deploymentAnnotations:
@@ -33,14 +37,14 @@ configValues:
     enabled: false
   # ----------- containers ------------
   image:
-    repository: mc-thumbnail-generator
-    tag: v1.0.21
+    repository: common/mc-thumbnail-generator
+    tag: v1.0.0
     pullPolicy: Always
     debug: false
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
-    runAsUser: 1000700000
+    runAsUser: 1000720000
   extraEnvVars:
     - name: SERVER_PORT
       value: '{{ .Values.configValues.containerPorts.http }}'
@@ -72,15 +76,15 @@ configValues:
       configMap:
         name: '{{ template "common.names.fullname" . }}'
         items:
-        - key: "CESIUM_CLIENT_WEB_CONFIG"
-          path: "cesiumClientWebConfig.json"
+          - key: "CESIUM_CLIENT_WEB_CONFIG"
+            path: "cesiumClientWebConfig.json"
 env:
   logLevel: info
   logPrettyPrintEnabled: false
   responseCompressionEnabled: true
   requestPayloadLimit: 1mb
   defaultAOIBBoxPoints: '[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]'
-  serviceUrl: http://bff.url
+  serviceUrl: ''
   zipName: Thumbnails.zip
   watermarkTimeout: 90000
   loadingTilesTimeout: 20000
