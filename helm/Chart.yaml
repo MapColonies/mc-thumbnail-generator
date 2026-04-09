@@ -2,8 +2,8 @@ apiVersion: v2
 name: mc-thumbnail-generator
 description: A Helm chart for mc-thumbnail-generator service
 type: application
-version: 3.1.1
-appVersion: 3.1.1
+version: 3.1.2
+appVersion: 3.1.2
 dependencies:
   - name: helm-common
     version: 1.0.1

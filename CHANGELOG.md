@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.2](https://github.com/MapColonies/mc-thumbnail-generator/compare/v3.1.1...v3.1.2) (2026-04-09)
+
+
+### Bug Fixes
+
+* values ([6868e1a](https://github.com/MapColonies/mc-thumbnail-generator/commit/6868e1a2f042b44c7ced5a03dc8dfc323b3906c2))
+
 ## [3.1.1](https://github.com/MapColonies/mc-thumbnail-generator/compare/v3.1.0...v3.1.1) (2026-03-19)
 
 
