@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.3](https://github.com/MapColonies/mc-thumbnail-generator/compare/v3.1.2...v3.1.3) (2026-08-03)
+
+
+### Bug Fixes
+
+* helm sync with infra ([0882ac7](https://github.com/MapColonies/mc-thumbnail-generator/commit/0882ac7e164a9141c0e27778a19b5ce25d543f02))
+* helm sync with infra ([5470e63](https://github.com/MapColonies/mc-thumbnail-generator/commit/5470e63bbbe2c6fd0ad0d01951aa8ca3c7d90b2b))
+
 ## [3.1.2](https://github.com/MapColonies/mc-thumbnail-generator/compare/v3.1.1...v3.1.2) (2026-04-09)
 
 
