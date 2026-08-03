@@ -38,7 +38,7 @@ configValues:
   # ----------- containers ------------
   image:
     repository: common/mc-thumbnail-generator
-    tag: v1.0.0
+    tag: ''
     pullPolicy: Always
     debug: false
   containerSecurityContext:
